@@ -21,9 +21,15 @@
     <ClCompile Include="src\Lsystem.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\LSystemVisualizer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Lsystem.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\LSystemVisualizer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

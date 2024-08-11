@@ -1,7 +1,9 @@
 #include <iostream>
 #include "raylib.h"
 #include "Lsystem.h"
-
+#include "LSystemVisualizer.h"
+#include <cmath>
+#include <stack>
 
 int main()
 {
@@ -14,13 +16,20 @@ int main()
 
 	SetTargetFPS(120);
 
+	Lsystem lsystem;
+	lsystem.AddRule('F', "FF+[+F-F-F]-[-F+F+F]");
+	//lsystem.AddRule('B', "A");
+
+	std::string res = lsystem.GenerateLsystem(5, "F");
+
+	//std::cout << res << '\n';
 
 	while (!WindowShouldClose())
 	{
 		BeginDrawing();
 		ClearBackground(SKYBLUE);
 
-
+		Visualizer::VisualiseLsystem(res, winndowWidth / 2, windowHeight - 50, 25, 6);
 		EndDrawing();
 	}
 
