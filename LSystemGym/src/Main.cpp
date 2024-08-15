@@ -5,8 +5,7 @@
 #include <cmath>
 #include <stack>
 #include "imgui.h"
-#include "imgui_impl_dx12.h"
-
+#include "rlImGui.h"
 
 int main()
 {
@@ -15,9 +14,13 @@ int main()
 	const int winndowWidth = 800;
 	const int windowHeight = 800;
 
+
+	float angle = 90;
+
 	InitWindow(windowHeight, winndowWidth, "L-System Gym");
 
 	SetTargetFPS(120);
+	rlImGuiSetup(true);
 
 	Lsystem lsystem;
 	lsystem.AddRule('F', "FF+[+F-F-F]-[-F+F+F]");
@@ -32,10 +35,24 @@ int main()
 		BeginDrawing();
 		ClearBackground(SKYBLUE);
 
-		Visualizer::VisualiseLsystem(res, winndowWidth / 2, windowHeight - 50, 25, 6);
+		// gui
+
+		rlImGuiBegin();
+
+		ImGui::Begin("RAY_LSYSTEM", NULL);
+		ImGui::Text("Angle");
+		ImGui::SliderFloat("Angle", &angle, 0, 360, "%.3f", 0);
+		ImGui::End();
+
+		rlImGuiEnd();
+
+		
+
+		Visualizer::VisualiseLsystem(res, winndowWidth / 2, windowHeight - 50, angle, 6);
 		EndDrawing();
 	}
 
+	rlImGuiShutdown();
 	CloseWindow();
 	return 0;
 }
