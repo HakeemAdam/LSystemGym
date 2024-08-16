@@ -4,7 +4,7 @@
 #include "LSystemVisualizer.h"
 #include <cmath>
 #include <stack>
-#include "imgui.h"
+#include "LSystemController.h"
 #include "rlImGui.h"
 
 int main()
@@ -24,11 +24,10 @@ int main()
 
 	Lsystem lsystem;
 	lsystem.AddRule('F', "FF+[+F-F-F]-[-F+F+F]");
-	//lsystem.AddRule('B', "A");
+	LSystemController controller;
 
 	std::string res = lsystem.GenerateLsystem(5, "F");
 
-	//std::cout << res << '\n';
 
 	while (!WindowShouldClose())
 	{
@@ -39,13 +38,11 @@ int main()
 
 		rlImGuiBegin();
 
-		ImGui::Begin("RAY_LSYSTEM", NULL);
-		ImGui::Text("Angle");
-		ImGui::SliderFloat("Angle", &angle, 0, 360, "%.3f", 0);
-		ImGui::End();
+		controller.DrawUI();
 
 		rlImGuiEnd();
 
+		angle = controller.GetAngel();
 		
 
 		Visualizer::VisualiseLsystem(res, winndowWidth / 2, windowHeight - 50, angle, 6);
