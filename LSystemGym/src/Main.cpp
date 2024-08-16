@@ -16,6 +16,7 @@ int main()
 
 
 	float angle = 90;
+	int iteration;
 
 	InitWindow(windowHeight, winndowWidth, "L-System Gym");
 
@@ -43,9 +44,10 @@ int main()
 		rlImGuiEnd();
 
 		angle = controller.GetAngel();
+		iteration = controller.GetIteration();
 		
 
-		Visualizer::VisualiseLsystem(res, winndowWidth / 2, windowHeight - 50, angle, 6);
+		Visualizer::VisualiseLsystem(res, winndowWidth / 2, windowHeight - 50, angle, iteration);
 		EndDrawing();
 	}
 
