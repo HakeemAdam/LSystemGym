@@ -24,10 +24,11 @@ int main()
 	rlImGuiSetup(true);
 
 	Lsystem lsystem;
-	lsystem.AddRule('F', "FF+[+F-F-F]-[-F+F+F]");
-	LSystemController controller;
+	//lsystem.AddRule('F', "FF+[+F-F-F]-[-F+F+F]");
+	LSystemController controller(&lsystem);
+	controller.InitLystem();
 
-	std::string res = lsystem.GenerateLsystem(5, "F");
+	//std::string res = lsystem.GenerateLsystem(controller.GetIteration(), "F");
 
 
 	while (!WindowShouldClose())
@@ -38,14 +39,13 @@ int main()
 		// gui
 
 		rlImGuiBegin();
-
 		controller.DrawUI();
-
 		rlImGuiEnd();
 
 		angle = controller.GetAngel();
 		length = controller.GetLength();
 		
+		std::string res = lsystem.GetCurrentString();
 
 		Visualizer::VisualiseLsystem(res, winndowWidth / 2, windowHeight - 50, angle, length);
 		EndDrawing();

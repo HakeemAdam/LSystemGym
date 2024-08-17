@@ -1,10 +1,10 @@
 #include "Lsystem.h"
 #include "iostream"
 
-std::string Lsystem::GenerateLsystem(int iterations, std::string Axiom)
+std::string Lsystem::GenerateLsystem(int iterations)
 {
 
-	std::string startString = Axiom;
+	std::string startString = m_Axiom;
 	std::string endString = "";
 
 	for (size_t i = 0; i < m_Iterations; i++)
@@ -13,6 +13,7 @@ std::string Lsystem::GenerateLsystem(int iterations, std::string Axiom)
 		startString = endString;
 	}
 	
+	m_currentString = endString;
 	return endString;
 }
 
@@ -25,6 +26,11 @@ std::string Lsystem::ProcessString(std::string Axiom)
 		newString += ApplyRules(c);
 	}
 	return newString;
+}
+
+void Lsystem::SetAxiom(const std::string& axiom)
+{
+	m_Axiom = axiom;
 }
 
 std::string Lsystem::ApplyRules(char c)
@@ -42,6 +48,11 @@ std::string Lsystem::ApplyRules(char c)
 void Lsystem::AddRule(char predecessor, const std::string& successor)
 {
 	m_Rules.push_back({ predecessor, successor });
+}
+
+void Lsystem::SetIteration(int iteration)
+{
+	m_Iterations = iteration;
 }
 
 void Lsystem::ClearRules()
