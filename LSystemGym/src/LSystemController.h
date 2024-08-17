@@ -1,19 +1,24 @@
 #ifndef LSYSTEMCONTROLER_H
+//#include "Lsystem.h"
 #include "imgui.h"
+
+class Lsystem;
 
 class LSystemController
 {
 public:
-	LSystemController() :m_angle(90), m_iterations(5) {};
-	~LSystemController() {};
+	LSystemController();
+	~LSystemController();
 
 	void DrawUI();
 	float GetAngel() const { return m_angle; }
-	int GetIteration() const { return m_iterations; }
+	int GetLength() const { return m_length; }
 
 private:
 	float m_angle;
-	int m_iterations;
+	int m_length;
+
+	Lsystem* m_lsystem;
 
 };
 

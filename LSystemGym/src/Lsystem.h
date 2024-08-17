@@ -31,6 +31,8 @@ public:
 	std::string ApplyRules(char c);
 	void AddRule(char predecessor, const std::string& successor);
 
+	void ClearRules();
+
 	
 
 };

@@ -1,4 +1,16 @@
 #include "LSystemController.h"
+#include "Lsystem.h"
+
+LSystemController::LSystemController()
+	:m_angle(90), m_length(5), m_lsystem(nullptr)
+{
+	m_lsystem = new Lsystem();
+}
+
+LSystemController::~LSystemController()
+{
+	delete m_lsystem;
+}
 
 void LSystemController::DrawUI()
 {
@@ -9,9 +21,15 @@ void LSystemController::DrawUI()
 
 	ImGui::Separator();
 
-	ImGui::Text("Iterations");
-	ImGui::SliderInt("Iteration", &m_iterations, 1, 10, "%d", 0);
+	ImGui::Text("Length");
+	ImGui::SliderInt("Iteration", &m_length, 1, 10, "%d", 0);
 
+	if (ImGui::Button("Clear Rules"))
+	{
+		m_lsystem->ClearRules();
+		
+	}
+	
 
 	ImGui::End();
 }

@@ -1,14 +1,13 @@
 #include "Lsystem.h"
+#include "iostream"
 
 std::string Lsystem::GenerateLsystem(int iterations, std::string Axiom)
 {
-	iterations = m_Iterations;
-
 
 	std::string startString = Axiom;
 	std::string endString = "";
 
-	for (size_t i = 0; i < iterations; i++)
+	for (size_t i = 0; i < m_Iterations; i++)
 	{
 		endString = ProcessString(startString);
 		startString = endString;
@@ -43,6 +42,12 @@ std::string Lsystem::ApplyRules(char c)
 void Lsystem::AddRule(char predecessor, const std::string& successor)
 {
 	m_Rules.push_back({ predecessor, successor });
+}
+
+void Lsystem::ClearRules()
+{
+	m_Rules.clear();
+	//std::cout << "Rules cleared. Current rule count: " << m_Rules.size() << std::endl;
 }
 
 
