@@ -32,6 +32,13 @@ void LSystemController::DrawUI()
 
 	ImGui::Separator();
 
+	static char axiomBuffer[256] = "F";
+	if (ImGui::InputText("Axiom", axiomBuffer, IM_ARRAYSIZE(axiomBuffer)))
+	{
+		m_lsystem->SetAxiom(axiomBuffer);
+		m_lsystem->GenerateLsystem(m_iterations);
+	}
+
 	static char inputBuffer[256] = "";
 	ImGui::Text("Rules");
 	bool inputChanged = ImGui::InputText("Enter New Rule", inputBuffer, IM_ARRAYSIZE(inputBuffer), ImGuiInputTextFlags_EnterReturnsTrue);
@@ -47,7 +54,8 @@ void LSystemController::DrawUI()
 
 		}
 	}
-		
+	
+	
 
 	if (ImGui::Button("Clear Rules"))
 	{
