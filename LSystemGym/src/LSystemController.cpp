@@ -32,17 +32,35 @@ void LSystemController::DrawUI()
 
 	ImGui::Separator();
 
+	static char inputBuffer[256] = "";
+	ImGui::Text("Rules");
+	bool inputChanged = ImGui::InputText("Enter New Rule", inputBuffer, IM_ARRAYSIZE(inputBuffer), ImGuiInputTextFlags_EnterReturnsTrue);
+	
+	if (inputChanged || ImGui::Button("Apply Rules"))
+	{
+		if (inputBuffer[0] != '\0')
+		{
+			m_lsystem->ClearRules();
+			m_lsystem->SetAxiom("F");
+			m_lsystem->AddRule('F', std::string(inputBuffer));
+			m_lsystem->GenerateLsystem(m_iterations);
+
+		}
+	}
+		
 
 	if (ImGui::Button("Clear Rules"))
 	{
 		m_lsystem->ClearRules();
 		m_lsystem->GenerateLsystem(m_iterations);
+		inputBuffer[0] = '\0';
 		
 	}
 
-	if (ImGui::Button("Generate L-System"))
+	if (ImGui::Button("Reset to Default"))
 	{
 		InitLystem();
+		strcpy_s(inputBuffer, "FF+[+F-F-F]-[-F+F+F]");
 	}
 	
 
@@ -53,6 +71,7 @@ void LSystemController::InitLystem()
 {
 	if (m_lsystem)
 	{
+		m_lsystem->ClearRules();
 		m_lsystem->SetAxiom("F");
 		m_lsystem->AddRule('F', "FF+[+F-F-F]-[-F+F+F]");
 		m_lsystem->GenerateLsystem(m_iterations);
