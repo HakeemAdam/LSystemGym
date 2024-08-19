@@ -17,10 +17,10 @@ void LSystemController::DrawUI()
 
 	ImGui::Begin("L-System Controller", NULL);
 	ImGui::Text("Angle");
-	ImGui::SliderFloat("Angle", &m_angle, 0, 360, "%.3f", 0);
+	ImGui::SliderFloat("Angle", &m_angle, 0, 360, "%.0f", 0);
 
 	ImGui::Text("Length");
-	ImGui::SliderInt("Length", &m_length, 1, 10, "%d", 0);
+	ImGui::SliderInt("Length", &m_length, 1, 100, "%d", 0);
 
 	ImGui::Text("Iterations");
 	//m_iterations = m_lsystem->GetIterations();
@@ -37,6 +37,7 @@ void LSystemController::DrawUI()
 	{
 		m_lsystem->SetAxiom(axiomBuffer);
 		m_lsystem->GenerateLsystem(m_iterations);
+		m_currentAxiom = std::string(axiomBuffer);
 	}
 
 	static char inputBuffer[256] = "";
@@ -51,6 +52,7 @@ void LSystemController::DrawUI()
 			m_lsystem->SetAxiom("F");
 			m_lsystem->AddRule('F', std::string(inputBuffer));
 			m_lsystem->GenerateLsystem(m_iterations);
+			m_currentRule = std::string(inputBuffer);
 
 		}
 	}
@@ -65,10 +67,20 @@ void LSystemController::DrawUI()
 		
 	}
 
+	if (ImGui::Button("Clear Axiom"))
+	{
+		m_lsystem->SetAxiom("");
+		axiomBuffer[0] = '\0';
+	}
+
 	if (ImGui::Button("Reset to Default"))
 	{
 		InitLystem();
-		strcpy_s(inputBuffer, "FF+[+F-F-F]-[-F+F+F]");
+		size_t inputBufferSize = sizeof(inputBuffer);
+		size_t axiomBufferSize = sizeof(axiomBuffer);
+
+		strncpy_s(inputBuffer, inputBufferSize, m_currentRule.c_str(), _TRUNCATE);
+		strncpy_s(axiomBuffer, axiomBufferSize, m_currentAxiom.c_str(), _TRUNCATE);
 	}
 	
 
@@ -80,8 +92,14 @@ void LSystemController::InitLystem()
 	if (m_lsystem)
 	{
 		m_lsystem->ClearRules();
-		m_lsystem->SetAxiom("F");
-		m_lsystem->AddRule('F', "FF+[+F-F-F]-[-F+F+F]");
+		InitDefaultRules();
 		m_lsystem->GenerateLsystem(m_iterations);
 	}
+}
+
+void LSystemController::InitDefaultRules()
+{
+	m_lsystem->SetAxiom("X");
+	m_lsystem->AddRule('X', "F+[[X]-X]-F[-FX]+X");
+	m_lsystem->AddRule('F', "FF");
 }

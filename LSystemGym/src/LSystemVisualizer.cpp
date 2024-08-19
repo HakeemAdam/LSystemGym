@@ -9,6 +9,7 @@ struct LineSegment
 {
 	Vector2 start;
 	Vector2 end;
+	Color color;
 };
 
 void Visualizer::VisualiseLsystem(const std::string& lstring, float startX, float startY, float angle, float length)
@@ -22,19 +23,30 @@ void Visualizer::VisualiseLsystem(const std::string& lstring, float startX, floa
 	std::stack<Vector2> positionStack;
 	std::stack<float> angleStack;
 
+	std::stack<Color> colorStack;
+	Color currentColor = BLACK;
+
+	float currentLemght = length;
+
 	for (char c : lstring)
 	{
 		switch (c)
 		{
-		case 'F':
+		case 'F': case 'X' : case 'A':
 		{
 			float x2 = x + length * cos(currentAngle * DEG2RAD);
 			float y2 = y + length * sin(currentAngle * DEG2RAD);
 			
-			segments.push_back({ {x,y}, {x2,y2} });
-			//DrawLine(x, y, x2, y2, BLACK);
+			segments.push_back({ {x,y}, {x2,y2}, currentColor });
+		
 			x = x2;
 			y = y2;
+			break;
+		}
+		case 'f':
+		{
+			x += currentLemght * cos(currentAngle * DEG2RAD);
+			y += currentLemght * sin(currentAngle * DEG2RAD);
 			break;
 		}
 		case '+':
@@ -46,9 +58,10 @@ void Visualizer::VisualiseLsystem(const std::string& lstring, float startX, floa
 		case '[':
 			positionStack.push({ x,y });
 			angleStack.push(currentAngle);
+			colorStack.push(currentColor);
 			break;
 		case ']':
-			if (!positionStack.empty() && !angleStack.empty())
+			if (!positionStack.empty() && !angleStack.empty() && !colorStack.empty())
 			{
 				Vector2 pos = positionStack.top();
 				positionStack.pop();
@@ -56,7 +69,15 @@ void Visualizer::VisualiseLsystem(const std::string& lstring, float startX, floa
 				y = pos.y;
 				currentAngle = angleStack.top();
 				angleStack.pop();
+				currentColor = colorStack.top();
+				colorStack.pop();
 			}
+			break;
+		case '!':
+			currentLemght *= 0.9f;
+			break;
+		case '?':
+			currentLemght *= 1.1f;
 			break;
 		}
 	}
@@ -68,7 +89,7 @@ void Visualizer::VisualiseLsystem(const std::string& lstring, float startX, floa
 		if (CheckCollisionPointRec(segment.start, screenBounds) ||
 			CheckCollisionPointRec(segment.end, screenBounds))
 		{
-			DrawLineV(segment.start, segment.end, BLACK);
+			DrawLineV(segment.start, segment.end, segment.color);
 		}
 		
 	}
