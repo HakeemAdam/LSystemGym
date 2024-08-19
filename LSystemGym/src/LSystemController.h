@@ -2,8 +2,10 @@
 //#include "Lsystem.h"
 #include "imgui.h"
 #include <string>
+#include <map>
 
 class Lsystem;
+struct LSystemPreset;
 
 class LSystemController
 {
@@ -14,6 +16,7 @@ public:
 	void DrawUI();
 	void InitLystem();
 	void InitDefaultRules();
+	void SetPreset(const LSystemPreset& preset);
 
 	float GetAngel() const { return m_angle; }
 	int GetLength() const { return m_length; }
@@ -26,6 +29,8 @@ private:
 
 	std::string m_currentAxiom;
 	std::string m_currentRule;
+
+	std::map<char, std::string> m_currentRules;
 
 	Lsystem* m_lsystem;
 

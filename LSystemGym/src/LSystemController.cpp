@@ -1,5 +1,7 @@
 #include "LSystemController.h"
 #include "Lsystem.h"
+#include "LSystemPreset.h"
+
 
 LSystemController::LSystemController(Lsystem* lsystem)
 	:m_angle(90), m_length(5), m_lsystem(lsystem), m_iterations(5)
@@ -82,6 +84,20 @@ void LSystemController::DrawUI()
 		strncpy_s(inputBuffer, inputBufferSize, m_currentRule.c_str(), _TRUNCATE);
 		strncpy_s(axiomBuffer, axiomBufferSize, m_currentAxiom.c_str(), _TRUNCATE);
 	}
+
+	ImGui::Separator();
+
+	if (ImGui::BeginCombo("Presets", "Select a preset"))
+	{
+		for (const auto& preset : LSystemPresets::GetAllPresets())
+		{
+			if (ImGui::Selectable(preset.name.c_str()))
+			{
+				SetPreset(preset);
+			}
+		}
+		ImGui::EndCombo();
+	}
 	
 
 	ImGui::End();
@@ -102,4 +118,18 @@ void LSystemController::InitDefaultRules()
 	m_lsystem->SetAxiom("X");
 	m_lsystem->AddRule('X', "F+[[X]-X]-F[-FX]+X");
 	m_lsystem->AddRule('F', "FF");
+}
+
+void LSystemController::SetPreset(const LSystemPreset& preset)
+{
+	m_currentAxiom = preset.axiom;
+	m_currentRules = preset.rules;
+	m_lsystem->SetAxiom(m_currentAxiom);
+	m_lsystem->ClearRules();
+
+	for (const auto& rule : m_currentRules )
+	{
+		m_lsystem->AddRule(rule.first, rule.second);
+	}
+	m_lsystem->GenerateLsystem(m_iterations);
 }

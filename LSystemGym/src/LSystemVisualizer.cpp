@@ -32,7 +32,7 @@ void Visualizer::VisualiseLsystem(const std::string& lstring, float startX, floa
 	{
 		switch (c)
 		{
-		case 'F': case 'X' : case 'A':
+		case 'F': case 'X' : case 'A': case 'G': case 'Y':
 		{
 			float x2 = x + length * cos(currentAngle * DEG2RAD);
 			float y2 = y + length * sin(currentAngle * DEG2RAD);
