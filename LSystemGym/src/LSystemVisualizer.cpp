@@ -12,7 +12,7 @@ struct LineSegment
 	Color color;
 };
 
-void Visualizer::VisualiseLsystem(const std::string& lstring, float startX, float startY, float angle, float length)
+void Visualizer::VisualiseLsystem(const std::string& lstring, float startX, float startY, float angle, float length, Color col)
 {
 	std::vector<LineSegment> segments;
 
@@ -24,7 +24,7 @@ void Visualizer::VisualiseLsystem(const std::string& lstring, float startX, floa
 	std::stack<float> angleStack;
 
 	std::stack<Color> colorStack;
-	Color currentColor = BLACK;
+	Color currentColor = col;
 
 	float currentLemght = length;
 
@@ -58,10 +58,9 @@ void Visualizer::VisualiseLsystem(const std::string& lstring, float startX, floa
 		case '[':
 			positionStack.push({ x,y });
 			angleStack.push(currentAngle);
-			colorStack.push(currentColor);
 			break;
 		case ']':
-			if (!positionStack.empty() && !angleStack.empty() && !colorStack.empty())
+			if (!positionStack.empty() && !angleStack.empty())
 			{
 				Vector2 pos = positionStack.top();
 				positionStack.pop();
@@ -69,8 +68,6 @@ void Visualizer::VisualiseLsystem(const std::string& lstring, float startX, floa
 				y = pos.y;
 				currentAngle = angleStack.top();
 				angleStack.pop();
-				currentColor = colorStack.top();
-				colorStack.pop();
 			}
 			break;
 		case '!':

@@ -6,6 +6,7 @@
 #include <stack>
 #include "LSystemController.h"
 #include "rlImGui.h"
+#include "rlImGuiColors.h"
 
 int main()
 {
@@ -24,12 +25,12 @@ int main()
 	rlImGuiSetup(true);
 
 	Lsystem lsystem;
-	//lsystem.AddRule('F', "FF+[+F-F-F]-[-F+F+F]");
 	LSystemController controller(&lsystem);
 	controller.InitLystem();
 
-	//std::string res = lsystem.GenerateLsystem(controller.GetIteration(), "F");
-
+	Color col;
+	ImColor uiCol;
+	
 
 	while (!WindowShouldClose())
 	{
@@ -44,10 +45,12 @@ int main()
 
 		angle = controller.GetAngel();
 		length = controller.GetLength();
+		uiCol = controller.GetColor();
+		col = rlImGuiColors::Convert(uiCol);
 		
 		std::string res = lsystem.GetCurrentString();
 
-		Visualizer::VisualiseLsystem(res, winndowWidth/2, windowHeight-200, angle, length);
+		Visualizer::VisualiseLsystem(res, winndowWidth/2, windowHeight-200, angle, length, col);
 		EndDrawing();
 	}
 

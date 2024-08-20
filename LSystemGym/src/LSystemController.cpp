@@ -4,7 +4,7 @@
 
 
 LSystemController::LSystemController(Lsystem* lsystem)
-	:m_angle(90), m_length(5), m_lsystem(lsystem), m_iterations(5)
+	:m_angle(90), m_length(5), m_lsystem(lsystem), m_iterations(5), m_currentColor(0,0,0,255)
 {
 	//m_lsystem = new Lsystem();
 }
@@ -99,6 +99,13 @@ void LSystemController::DrawUI()
 		ImGui::EndCombo();
 	}
 	
+
+	ImGui::Separator();
+	//m_currentColor = ImColor(0, 0, 0, 255);
+	if (ImGui::ColorPicker4("Set Color", &m_currentColor.Value.x))
+	{
+		m_currentColor = ImColor(m_currentColor.Value.x, m_currentColor.Value.y, m_currentColor.Value.z, m_currentColor.Value.w);
+	}
 
 	ImGui::End();
 }

@@ -6,6 +6,7 @@
 
 class Lsystem;
 struct LSystemPreset;
+struct Color;
 
 class LSystemController
 {
@@ -21,11 +22,14 @@ public:
 	float GetAngel() const { return m_angle; }
 	int GetLength() const { return m_length; }
 	int GetIteration() const { return m_iterations; }
+	ImColor GetColor() const { return m_currentColor; }
 
 private:
 	float m_angle;
 	int m_length;
 	int m_iterations;
+	
+	ImColor m_currentColor;
 
 	std::string m_currentAxiom;
 	std::string m_currentRule;
