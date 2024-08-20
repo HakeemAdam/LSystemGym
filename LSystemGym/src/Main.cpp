@@ -11,8 +11,8 @@ int main()
 {
 	std::cout << "Hello Lsystem" << '\n';
 
-	const int winndowWidth = 800;
-	const int windowHeight = 800;
+	const int winndowWidth = 1000;
+	const int windowHeight = 1000;
 
 
 	float angle = 90;
@@ -47,7 +47,7 @@ int main()
 		
 		std::string res = lsystem.GetCurrentString();
 
-		Visualizer::VisualiseLsystem(res, winndowWidth / 2, windowHeight - 50, angle, length);
+		Visualizer::VisualiseLsystem(res, winndowWidth/2, windowHeight-200, angle, length);
 		EndDrawing();
 	}
 

@@ -18,6 +18,10 @@ public:
 	static const LSystemPreset Dragon;
 	static const LSystemPreset Sierpinski;
 	static const LSystemPreset Plant;
+	static const LSystemPreset KochCurveA;
+	static const LSystemPreset KochCurveB;
+	static const LSystemPreset KochCurveC;
+	static const LSystemPreset KochCurveD;
 
 	static const std::vector<LSystemPreset>& GetAllPresets();
 

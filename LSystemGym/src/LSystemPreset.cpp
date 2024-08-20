@@ -21,8 +21,36 @@ const LSystemPreset LSystemPresets::Plant =
     {{'X', "F+[[X]-X]-F[-FX]+X"}, {'F', "FF"}}
 };
 
+const LSystemPreset LSystemPresets::KochCurveA =
+{
+    "Koch Curve A",
+    " F-F-F-F",
+    {{'F', "FF-F-F-F-F-F+F"}}
+};
+
+const LSystemPreset LSystemPresets::KochCurveB =
+{
+    "Koch Curve B",
+    " F-F-F-F",
+    {{'F', "FF-F-F-F-FF"}}
+};
+
+const LSystemPreset LSystemPresets::KochCurveC =
+{
+    "Koch Curve C",
+    " F-F-F-F",
+    {{'F', "FF-F+F-F-FF"}}
+};
+
+const LSystemPreset LSystemPresets::KochCurveD =
+{
+    "Koch Curve D",
+    " F-F-F-F",
+    {{'F', "FF-F--F-F"}}
+};
+
 const std::vector<LSystemPreset>& LSystemPresets::GetAllPresets()
 {
-    static const std::vector<LSystemPreset> allPresets = { Dragon, Sierpinski, Plant };
+    static const std::vector<LSystemPreset> allPresets = { Dragon, Sierpinski, Plant, KochCurveA, KochCurveB, KochCurveC, KochCurveD };
     return allPresets;
 }
