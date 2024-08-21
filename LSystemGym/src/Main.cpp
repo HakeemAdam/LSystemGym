@@ -22,6 +22,7 @@ int main()
 	float mouseX = static_cast<float>(winndowWidth) / 2;
 	float mouseY = static_cast<float>(windowHeight) - 200;
 
+	SetConfigFlags(FLAG_VSYNC_HINT | FLAG_WINDOW_RESIZABLE);
 	InitWindow(windowHeight, winndowWidth, "L-System Gym");
 
 	SetTargetFPS(120);
