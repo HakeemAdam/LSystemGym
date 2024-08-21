@@ -75,12 +75,14 @@ void LSystemController::DrawUI()
 		axiomBuffer[0] = '\0';
 	}
 
+
+	size_t inputBufferSize = sizeof(inputBuffer);
+	size_t axiomBufferSize = sizeof(axiomBuffer);
+
 	if (ImGui::Button("Reset to Default"))
 	{
 		InitLystem();
-		size_t inputBufferSize = sizeof(inputBuffer);
-		size_t axiomBufferSize = sizeof(axiomBuffer);
-
+		
 		strncpy_s(inputBuffer, inputBufferSize, m_currentRule.c_str(), _TRUNCATE);
 		strncpy_s(axiomBuffer, axiomBufferSize, m_currentAxiom.c_str(), _TRUNCATE);
 	}
@@ -94,6 +96,8 @@ void LSystemController::DrawUI()
 			if (ImGui::Selectable(preset.name.c_str()))
 			{
 				SetPreset(preset);
+				strncpy_s(axiomBuffer, axiomBufferSize, preset.axiom.c_str(), _TRUNCATE);
+	
 			}
 		}
 		ImGui::EndCombo();
@@ -106,6 +110,7 @@ void LSystemController::DrawUI()
 	{
 		m_currentColor = ImColor(m_currentColor.Value.x, m_currentColor.Value.y, m_currentColor.Value.z, m_currentColor.Value.w);
 	}
+
 
 	ImGui::End();
 }

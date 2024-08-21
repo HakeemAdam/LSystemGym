@@ -24,6 +24,8 @@ public:
 	int GetIteration() const { return m_iterations; }
 	ImColor GetColor() const { return m_currentColor; }
 
+	
+
 private:
 	float m_angle;
 	int m_length;

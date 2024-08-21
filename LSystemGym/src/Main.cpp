@@ -19,6 +19,9 @@ int main()
 	float angle = 90;
 	int length;
 
+	float mouseX = static_cast<float>(winndowWidth) / 2;
+	float mouseY = static_cast<float>(windowHeight) - 200;
+
 	InitWindow(windowHeight, winndowWidth, "L-System Gym");
 
 	SetTargetFPS(120);
@@ -34,6 +37,14 @@ int main()
 
 	while (!WindowShouldClose())
 	{
+		// events
+		
+		if (IsMouseButtonPressed(MOUSE_BUTTON_MIDDLE))
+		{
+			mouseX = GetMousePosition().x;
+			mouseY = GetMousePosition().y;
+		}
+		
 		BeginDrawing();
 		ClearBackground(SKYBLUE);
 
@@ -50,7 +61,7 @@ int main()
 		
 		std::string res = lsystem.GetCurrentString();
 
-		Visualizer::VisualiseLsystem(res, winndowWidth/2, windowHeight-200, angle, length, col);
+		Visualizer::VisualiseLsystem(res,mouseX , mouseY, angle, length, col);
 		EndDrawing();
 	}
 
