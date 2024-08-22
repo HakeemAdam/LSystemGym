@@ -7,6 +7,7 @@
 class Lsystem;
 struct LSystemPreset;
 struct Color;
+enum class AnimationMode;
 
 class LSystemController
 {
@@ -24,7 +25,11 @@ public:
 	int GetIteration() const { return m_iterations; }
 	ImColor GetColor() const { return m_currentColor; }
 
-	
+	int GetAnimationMode() const { return m_animationMode; }
+
+	bool ShouldRegenerate() const { return m_shouldRegenerate; }
+	bool ShouldAnimate() const { return m_shouldAnimate; }
+	void ResetFlags();
 
 private:
 	float m_angle;
@@ -39,6 +44,10 @@ private:
 	std::map<char, std::string> m_currentRules;
 
 	Lsystem* m_lsystem;
+
+	int m_animationMode;
+	bool m_shouldRegenerate;
+	bool m_shouldAnimate;
 
 };
 

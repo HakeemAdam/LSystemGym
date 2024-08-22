@@ -24,7 +24,7 @@ public:
 
 
 	void SetFullSegments(const std::vector<LineSegment>& segments);
-	void StartAnimation(AnimationMode mode);
+	void StartAnimation(int mode);
 	void StopAnimation();
 	void SetAnimationSpeed(float speed);
 	void AnimateAndDraw();

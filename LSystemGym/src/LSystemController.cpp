@@ -1,10 +1,15 @@
 #include "LSystemController.h"
 #include "Lsystem.h"
 #include "LSystemPreset.h"
+//#include "LSystemVisualizer.h"
 
 
 LSystemController::LSystemController(Lsystem* lsystem)
-	:m_angle(90), m_length(5), m_lsystem(lsystem), m_iterations(5), m_currentColor(0,0,0,255)
+	:m_angle(90), m_length(5), m_lsystem(lsystem), 
+	m_iterations(5), m_currentColor(0,0,0,255),
+	m_animationMode(0), 
+	m_shouldRegenerate(false),
+	m_shouldAnimate(false)
 {
 	//m_lsystem = new Lsystem();
 }
@@ -111,6 +116,33 @@ void LSystemController::DrawUI()
 		m_currentColor = ImColor(m_currentColor.Value.x, m_currentColor.Value.y, m_currentColor.Value.z, m_currentColor.Value.w);
 	}
 
+	ImGui::Separator();
+
+	const char* modes[] = { "Growth", "Fade" };
+	static int currentMode = 0;
+	ImGui::Combo("Animation Mode", &currentMode, modes, IM_ARRAYSIZE(modes));
+	m_animationMode = (currentMode == 0) ? 1 : 2;
+
+	if (ImGui::Button("Regenerate L-System"))
+	{
+		m_shouldRegenerate = true;
+	}
+
+	ImGui::SameLine();
+
+	if (ImGui::Button("Animate"))
+	{
+		m_shouldAnimate = true;
+	}
+
+	ImGui::SameLine();
+
+	if (ImGui::Button("Regenerate and Animate"))
+	{
+		m_shouldRegenerate = true;
+		m_shouldAnimate = true;
+	}
+
 
 	ImGui::End();
 }
@@ -144,4 +176,10 @@ void LSystemController::SetPreset(const LSystemPreset& preset)
 		m_lsystem->AddRule(rule.first, rule.second);
 	}
 	m_lsystem->GenerateLsystem(m_iterations);
+}
+
+void LSystemController::ResetFlags()
+{
+	m_shouldRegenerate = false;
+	m_shouldAnimate = false;
 }

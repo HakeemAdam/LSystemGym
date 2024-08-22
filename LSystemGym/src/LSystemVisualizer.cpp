@@ -76,9 +76,9 @@ void Visualizer::SetFullSegments(const std::vector<LineSegment>& segments)
 	m_fullSegments = segments;
 }
 
-void Visualizer::StartAnimation(AnimationMode mode)
+void Visualizer::StartAnimation(int mode)
 {
-	m_currentMode = mode;
+	m_currentMode = AnimationMode( mode);
 	m_animationProgress = 0.0f;
 }
 

@@ -64,14 +64,19 @@ int main()
 		
 		std::string res = lsystem.GetCurrentString();
 
-		segments = Visualizer::GenerateLSystem(res,mouseX , mouseY, angle, length, col);
+		if (controller.ShouldRegenerate())
+		{
+			segments = Visualizer::GenerateLSystem(res, mouseX, mouseY, angle,static_cast<float>(length), col);
+			visualizer.SetFullSegments(segments);
+		}
 		
-		visualizer.SetFullSegments(segments);
-		visualizer.StartAnimation(AnimationMode::Growth);
-
-
+		if (controller.ShouldAnimate())
+		{
+			visualizer.StartAnimation(controller.GetAnimationMode());
+		}
+		
 		visualizer.AnimateAndDraw();
-
+		controller.ResetFlags();
 		
 		EndDrawing();
 	}
