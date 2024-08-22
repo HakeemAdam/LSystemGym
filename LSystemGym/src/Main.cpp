@@ -2,8 +2,6 @@
 #include "raylib.h"
 #include "Lsystem.h"
 #include "LSystemVisualizer.h"
-#include <cmath>
-#include <stack>
 #include "LSystemController.h"
 #include "rlImGui.h"
 #include "rlImGuiColors.h"
@@ -22,7 +20,7 @@ int main()
 	float mouseX = static_cast<float>(winndowWidth) / 2;
 	float mouseY = static_cast<float>(windowHeight) - 200;
 
-	SetConfigFlags(FLAG_VSYNC_HINT | FLAG_WINDOW_RESIZABLE);
+	SetConfigFlags(FLAG_VSYNC_HINT | FLAG_WINDOW_RESIZABLE | FLAG_WINDOW_HIGHDPI);
 	InitWindow(windowHeight, winndowWidth, "L-System Gym");
 
 	SetTargetFPS(120);
@@ -31,6 +29,10 @@ int main()
 	Lsystem lsystem;
 	LSystemController controller(&lsystem);
 	controller.InitLystem();
+
+	Visualizer visualizer;
+
+	std::vector<LineSegment> segments;
 
 	Color col;
 	ImColor uiCol;
@@ -62,7 +64,15 @@ int main()
 		
 		std::string res = lsystem.GetCurrentString();
 
-		Visualizer::VisualiseLsystem(res,mouseX , mouseY, angle, length, col);
+		segments = Visualizer::GenerateLSystem(res,mouseX , mouseY, angle, length, col);
+		
+		visualizer.SetFullSegments(segments);
+		visualizer.StartAnimation(AnimationMode::Growth);
+
+
+		visualizer.AnimateAndDraw();
+
+		
 		EndDrawing();
 	}
 

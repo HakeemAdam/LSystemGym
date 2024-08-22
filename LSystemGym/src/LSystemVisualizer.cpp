@@ -1,21 +1,12 @@
 #include "LSystemVisualizer.h"
 #include <cmath>
 #include <stack>
-#include <vector>
-//#include "raymath.h"
-#include "raylib.h"
 
-struct LineSegment
-{
-	Vector2 start;
-	Vector2 end;
-	Color color;
-};
 
-void Visualizer::VisualiseLsystem(const std::string& lstring, float startX, float startY, float angle, float length, Color col)
+
+std::vector<LineSegment> Visualizer::GenerateLSystem(const std::string& lstring, float startX, float startY, float angle, float length, Color col)
 {
 	std::vector<LineSegment> segments;
-
 	float x = startX;
 	float y = startY;
 	float currentAngle = -90;
@@ -23,7 +14,6 @@ void Visualizer::VisualiseLsystem(const std::string& lstring, float startX, floa
 	std::stack<Vector2> positionStack;
 	std::stack<float> angleStack;
 
-	std::stack<Color> colorStack;
 	Color currentColor = col;
 
 	float currentLemght = length;
@@ -78,16 +68,60 @@ void Visualizer::VisualiseLsystem(const std::string& lstring, float startX, floa
 			break;
 		}
 	}
+	return segments;
+}
 
-	Rectangle screenBounds = { 0,0,GetScreenWidth(), GetScreenHeight() };
+void Visualizer::SetFullSegments(const std::vector<LineSegment>& segments)
+{
+	m_fullSegments = segments;
+}
 
-	for (const auto& segment : segments)
+void Visualizer::StartAnimation(AnimationMode mode)
+{
+	m_currentMode = mode;
+	m_animationProgress = 0.0f;
+}
+
+void Visualizer::StopAnimation()
+{
+	m_currentMode = AnimationMode::None;
+	m_animationProgress = 0.0f;
+}
+
+void Visualizer::SetAnimationSpeed(float speed)
+{
+	m_animationSpeed = speed;
+}
+
+void Visualizer::AnimateAndDraw()
+{
+	if (m_currentMode == AnimationMode::None)
 	{
-		if (CheckCollisionPointRec(segment.start, screenBounds) ||
-			CheckCollisionPointRec(segment.end, screenBounds))
+		for (const auto& segment : m_fullSegments)
 		{
 			DrawLineV(segment.start, segment.end, segment.color);
 		}
-		
+	}
+	else
+	{
+		m_animationProgress += GetFrameTime() * m_animationSpeed;
+		if (m_animationProgress > 1.0f) m_animationProgress = 1.0f;
+
+		int segmentsToShow = static_cast<int>(m_fullSegments.size() * m_animationProgress);
+
+
+		for (int i = 0; i < segmentsToShow; i++)
+		{
+			const auto& segment = m_fullSegments[i];
+			if (m_currentMode == AnimationMode::Growth)
+			{
+				DrawLineV(segment.start, segment.end, segment.color);
+			}
+			else if (m_currentMode == AnimationMode::Fade)
+			{
+				Color fadeColor = ColorAlpha(segment.color, m_animationProgress);
+				DrawLineV(segment.start, segment.end, segment.color);
+			}
+		}
 	}
 }
