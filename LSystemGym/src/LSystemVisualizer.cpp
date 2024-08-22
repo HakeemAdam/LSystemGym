@@ -78,6 +78,7 @@ void Visualizer::SetFullSegments(const std::vector<LineSegment>& segments)
 
 void Visualizer::StartAnimation(int mode)
 {
+	//m_currentMode = (mode == 1) ? AnimationMode::Growth : AnimationMode::Fade;
 	m_currentMode = AnimationMode( mode);
 	m_animationProgress = 0.0f;
 }
@@ -120,7 +121,7 @@ void Visualizer::AnimateAndDraw()
 			else if (m_currentMode == AnimationMode::Fade)
 			{
 				Color fadeColor = ColorAlpha(segment.color, m_animationProgress);
-				DrawLineV(segment.start, segment.end, segment.color);
+				DrawLineV(segment.start, segment.end, fadeColor);
 			}
 		}
 	}

@@ -126,6 +126,7 @@ void LSystemController::DrawUI()
 	//m_currentColor = ImColor(0, 0, 0, 255);
 	if (ImGui::ColorPicker4("Set Color", &m_currentColor.Value.x))
 	{
+		
 		m_currentColor = ImColor(m_currentColor.Value.x, m_currentColor.Value.y, m_currentColor.Value.z, m_currentColor.Value.w);
 		m_shouldRegenerate = true;
 	}
