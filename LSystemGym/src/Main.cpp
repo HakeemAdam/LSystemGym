@@ -16,6 +16,7 @@ int main()
 
 	float angle = 90;
 	int length;
+	float speed;
 
 	float mouseX = static_cast<float>(winndowWidth) / 2;
 	float mouseY = static_cast<float>(windowHeight) - 200;
@@ -46,6 +47,7 @@ int main()
 		{
 			mouseX = GetMousePosition().x;
 			mouseY = GetMousePosition().y;
+			controller.SetShouldRegenerate(true);
 		}
 		
 		BeginDrawing();
@@ -61,13 +63,18 @@ int main()
 		length = controller.GetLength();
 		uiCol = controller.GetColor();
 		col = rlImGuiColors::Convert(uiCol);
+		speed = controller.GetAnimationSpeed();
+		visualizer.SetAnimationSpeed(speed);
 		
-		std::string res = lsystem.GetCurrentString();
+		// Draw
 
 		if (controller.ShouldRegenerate())
 		{
+			std::string res = lsystem.GetCurrentString();
 			segments = Visualizer::GenerateLSystem(res, mouseX, mouseY, angle,static_cast<float>(length), col);
 			visualizer.SetFullSegments(segments);
+			visualizer.AnimateAndDraw();
+			controller.ResetFlags();
 		}
 		
 		if (controller.ShouldAnimate())

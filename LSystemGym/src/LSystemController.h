@@ -26,15 +26,18 @@ public:
 	ImColor GetColor() const { return m_currentColor; }
 
 	int GetAnimationMode() const { return m_animationMode; }
+	float GetAnimationSpeed() const { return m_animationSpeed; }
 
 	bool ShouldRegenerate() const { return m_shouldRegenerate; }
 	bool ShouldAnimate() const { return m_shouldAnimate; }
 	void ResetFlags();
+	void SetShouldRegenerate(bool value) { m_shouldRegenerate = value; }
 
 private:
 	float m_angle;
 	int m_length;
 	int m_iterations;
+	float m_animationSpeed;
 	
 	ImColor m_currentColor;
 
