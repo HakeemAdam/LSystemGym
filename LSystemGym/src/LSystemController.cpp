@@ -140,12 +140,19 @@ void LSystemController::DrawUI()
 	
 
 	ImGui::Separator();
-	if (ImGui::ColorPicker4("Set Color", &m_currentColor.Value.x))
+	ImGui::Text("Color");
+	ImVec2 colorPickerSize(200, 200);
+	
+	ImGui::BeginChild("ColorPickerChild", colorPickerSize);
+	ImGuiColorEditFlags flags =  ImGuiColorEditFlags_NoSidePreview | ImGuiColorEditFlags_NoSmallPreview;
+
+	if (ImGui::ColorPicker4("##picker", &m_currentColor.Value.x, flags, NULL))
 	{
 		
 		m_currentColor = ImColor(m_currentColor.Value.x, m_currentColor.Value.y, m_currentColor.Value.z, m_currentColor.Value.w);
 		m_shouldRegenerate = true;
 	}
+	ImGui::EndChild();
 
 	ImGui::Separator();
 
