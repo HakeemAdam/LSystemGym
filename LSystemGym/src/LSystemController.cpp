@@ -1,43 +1,48 @@
 #include "LSystemController.h"
 #include "Lsystem.h"
 #include "LSystemPreset.h"
+
 //#include "LSystemVisualizer.h"
 
 
 LSystemController::LSystemController(Lsystem* lsystem)
-	:m_angle(90), m_length(5), m_lsystem(lsystem),
+	:m_angle(20), m_length(5), m_lsystem(lsystem),
 	m_iterations(5), m_currentColor(0, 0, 0, 255),
 	m_animationMode(0),
 	m_shouldRegenerate(false),
 	m_shouldAnimate(false),
 	m_animationSpeed(0.5f)
 {
-	//m_lsystem = new Lsystem();
+	InitLystem();
 }
 
 LSystemController::~LSystemController()
 {
-	//delete m_lsystem;
 }
 
 void LSystemController::DrawUI()
 {
 
 	ImGui::Begin("L-System Controller", NULL);
-	ImGui::Text("Angle");
-	if (ImGui::SliderFloat("Angle", &m_angle, 0, 360, "%.0f", 0))
+	
+	float currentAngle = m_angle;
+	if (ImGui::SliderFloat("Angle", &currentAngle, 0, 360, "%.0f", 0))
 	{
+		m_angle = currentAngle;
+		m_shouldRegenerate = true;
+	}
+	ImGui::SameLine();
+	if (ImGui::Button("Reset##Angle"))
+	{
+		m_angle = m_currentPreset->angle;
 		m_shouldRegenerate = true;
 	}
 
-	ImGui::Text("Length");
 	if (ImGui::SliderInt("Length", &m_length, 1, 100, "%d", 0))
 	{
 		m_shouldRegenerate = true;
 	}
 
-	ImGui::Text("Iterations");
-	//m_iterations = m_lsystem->GetIterations();
 	if (ImGui::SliderInt("Iteration", &m_iterations, 1, 10, "%d", 0))
 	{
 		m_lsystem->SetIteration(m_iterations);
@@ -48,60 +53,73 @@ void LSystemController::DrawUI()
 	ImGui::Separator();
 
 	static char axiomBuffer[256] = "F";
+	strcpy_s(axiomBuffer, m_currentAxiom.c_str());
 	if (ImGui::InputText("Axiom", axiomBuffer, IM_ARRAYSIZE(axiomBuffer)))
 	{
-		m_lsystem->SetAxiom(axiomBuffer);
-		m_lsystem->GenerateLsystem(m_iterations);
 		m_currentAxiom = std::string(axiomBuffer);
+		m_lsystem->SetAxiom(m_currentAxiom);
+		m_lsystem->GenerateLsystem(m_iterations);
 		m_shouldRegenerate = true;
 	}
 
-	static char inputBuffer[256] = "";
 	ImGui::Text("Rules");
-	bool inputChanged = ImGui::InputText("Enter New Rule", inputBuffer, IM_ARRAYSIZE(inputBuffer), ImGuiInputTextFlags_EnterReturnsTrue);
-	
-	if (inputChanged || ImGui::Button("Apply Rules"))
-	{
-		if (inputBuffer[0] != '\0')
-		{
-			m_lsystem->ClearRules();
-			m_lsystem->SetAxiom("F");
-			m_lsystem->AddRule('F', std::string(inputBuffer));
-			m_lsystem->GenerateLsystem(m_iterations);
-			m_currentRule = std::string(inputBuffer);
-			m_shouldRegenerate = true;
+	bool rulesChnaged = false;
 
+	for (size_t i = 0; i < m_rulesInputs.size(); i++)
+	{
+		char buffer[256];
+		strcpy_s(buffer, m_rulesInputs[i].c_str());
+		std::string label = "Rule " + std::to_string(i + 1);
+		if (ImGui::InputText(label.c_str(), buffer, IM_ARRAYSIZE(buffer), ImGuiInputTextFlags_EnterReturnsTrue))
+		{
+			m_rulesInputs[i] = buffer;
+			rulesChnaged = true;
 		}
 	}
-	
-	
 
+	if (rulesChnaged)
+	{
+		UpdateRules();
+	}
+
+	if (ImGui::Button("Add Rule"))
+	{
+		m_rulesInputs.push_back("");
+		UpdateRules();
+	}
+
+	ImGui::SameLine();
+
+	if (ImGui::Button("Apply Rules"))
+	{
+		UpdateRules();
+	}
+
+	ImGui::SameLine();
+	
 	if (ImGui::Button("Clear Rules"))
 	{
+		m_rulesInputs.clear();
 		m_lsystem->ClearRules();
 		m_lsystem->GenerateLsystem(m_iterations);
-		inputBuffer[0] = '\0';
 		m_shouldRegenerate = true;
 		
 	}
 
+	ImGui::SameLine();
+
 	if (ImGui::Button("Clear Axiom"))
 	{
+		m_currentAxiom = "";
 		m_lsystem->SetAxiom("");
-		axiomBuffer[0] = '\0';
 		m_shouldRegenerate = true;
 	}
 
-
-	size_t inputBufferSize = sizeof(inputBuffer);
-	size_t axiomBufferSize = sizeof(axiomBuffer);
+	ImGui::SameLine();
 
 	if (ImGui::Button("Reset to Default"))
 	{
 		InitLystem();
-		
-		strncpy_s(inputBuffer, inputBufferSize, m_currentRule.c_str(), _TRUNCATE);
-		strncpy_s(axiomBuffer, axiomBufferSize, m_currentAxiom.c_str(), _TRUNCATE);
 		m_shouldRegenerate = true;
 	}
 
@@ -114,7 +132,6 @@ void LSystemController::DrawUI()
 			if (ImGui::Selectable(preset.name.c_str()))
 			{
 				SetPreset(preset);
-				strncpy_s(axiomBuffer, axiomBufferSize, preset.axiom.c_str(), _TRUNCATE);
 				m_shouldRegenerate = true;
 			}
 		}
@@ -123,7 +140,6 @@ void LSystemController::DrawUI()
 	
 
 	ImGui::Separator();
-	//m_currentColor = ImColor(0, 0, 0, 255);
 	if (ImGui::ColorPicker4("Set Color", &m_currentColor.Value.x))
 	{
 		
@@ -160,7 +176,7 @@ void LSystemController::DrawUI()
 		m_shouldAnimate = true;
 	}
 
-	ImGui::SliderFloat("Animation Speed", &m_animationSpeed, 0.01f, 1.0f, "%.03f", 0);
+	ImGui::SliderFloat("Animation Speed", &m_animationSpeed, 0.001f, 1.0f, "%.04f", 0);
 
 	ImGui::End();
 }
@@ -177,23 +193,48 @@ void LSystemController::InitLystem()
 
 void LSystemController::InitDefaultRules()
 {
-	m_lsystem->SetAxiom("X");
-	m_lsystem->AddRule('X', "F+[[X]-X]-F[-FX]+X");
-	m_lsystem->AddRule('F', "FF");
+	m_currentAxiom = "X";
+	m_lsystem->SetAxiom(m_currentAxiom);
+	m_rulesInputs = { "X=F+[[X]-X]-F[-FX]+X", "F=FF" };
+	UpdateRules();
 }
 
 void LSystemController::SetPreset(const LSystemPreset& preset)
 {
+	m_currentPreset = &preset;
 	m_currentAxiom = preset.axiom;
-	m_currentRules = preset.rules;
 	m_lsystem->SetAxiom(m_currentAxiom);
 	m_lsystem->ClearRules();
 
-	for (const auto& rule : m_currentRules )
+	m_rulesInputs.clear();
+
+	for (const auto& rule : preset.rules )
 	{
+		std::string ruleStr = std::string(1, rule.first) + "=" + rule.second;
+		m_rulesInputs.push_back(ruleStr);
 		m_lsystem->AddRule(rule.first, rule.second);
 	}
+	
+	m_angle = preset.angle;
 	m_lsystem->GenerateLsystem(m_iterations);
+	m_shouldRegenerate = true;
+}
+
+void LSystemController::UpdateRules()
+{
+	m_lsystem->ClearRules();
+	for (const auto& rule : m_rulesInputs )
+	{
+		size_t equalPos = rule.find('=');
+		if (equalPos != std::string::npos && equalPos > 0 && equalPos < rule.length() - 1)
+		{
+			char symbol = rule[0];
+			std::string replacement = rule.substr(equalPos + 1);
+			m_lsystem->AddRule(symbol, replacement);
+		}
+	}
+	m_lsystem->GenerateLsystem(m_iterations);
+	m_shouldRegenerate = true;
 }
 
 void LSystemController::ResetFlags()

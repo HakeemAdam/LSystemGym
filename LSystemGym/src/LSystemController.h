@@ -3,6 +3,7 @@
 #include "imgui.h"
 #include <string>
 #include <map>
+#include <vector>
 
 class Lsystem;
 struct LSystemPreset;
@@ -17,9 +18,7 @@ public:
 
 	void DrawUI();
 	void InitLystem();
-	void InitDefaultRules();
-	void SetPreset(const LSystemPreset& preset);
-
+	
 	float GetAngel() const { return m_angle; }
 	int GetLength() const { return m_length; }
 	int GetIteration() const { return m_iterations; }
@@ -32,6 +31,8 @@ public:
 	bool ShouldAnimate() const { return m_shouldAnimate; }
 	void ResetFlags();
 	void SetShouldRegenerate(bool value) { m_shouldRegenerate = value; }
+	void SetPreset(const LSystemPreset& preset);
+
 
 private:
 	float m_angle;
@@ -43,6 +44,7 @@ private:
 
 	std::string m_currentAxiom;
 	std::string m_currentRule;
+	std::vector<std::string> m_rulesInputs;
 
 	std::map<char, std::string> m_currentRules;
 
@@ -51,6 +53,10 @@ private:
 	int m_animationMode;
 	bool m_shouldRegenerate;
 	bool m_shouldAnimate;
+
+	const LSystemPreset* m_currentPreset;
+	void InitDefaultRules();
+	void UpdateRules();
 
 };
 

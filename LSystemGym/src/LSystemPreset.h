@@ -10,6 +10,7 @@ struct LSystemPreset
 	std::string name;
 	std::string axiom;
 	std::map<char, std::string> rules;
+	float angle;
 };
 
 class LSystemPresets
