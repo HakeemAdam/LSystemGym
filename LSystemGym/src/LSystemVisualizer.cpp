@@ -66,6 +66,18 @@ std::vector<LineSegment> Visualizer::GenerateLSystem(const std::string& lstring,
 		case '?':
 			currentLemght *= 1.1f;
 			break;
+		case '>':
+			currentLemght *= 1.1f;
+			break;
+		case '<':
+			currentLemght *= 0.9f;
+			break;
+		case '"':
+			currentLemght *= 0.5f;
+			break;
+		case '\'':
+			currentLemght *= 2.0f;
+			break;
 		}
 	}
 	return segments;
