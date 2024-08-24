@@ -242,6 +242,10 @@ void LSystemController::UpdateRules()
 			m_lsystem->AddRule(symbol, replacement);
 		}
 	}
+
+	// to do: check animation is not running before regenerating
+
+
 	m_lsystem->GenerateLsystem(m_iterations);
 	m_shouldRegenerate = true;
 }

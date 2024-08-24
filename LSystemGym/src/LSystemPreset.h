@@ -24,6 +24,16 @@ public:
 	static const LSystemPreset KochCurveC;
 	static const LSystemPreset KochCurveD;
 
+	static const LSystemPreset QuadraticGosper;
+	static const LSystemPreset QuadraticSnowflake;
+
+	static const LSystemPreset HilbeertCurve;
+	static const LSystemPreset HexagonalGosper;
+
+	static const LSystemPreset Kolam;
+	static const LSystemPreset SnakeKolam;
+	static const LSystemPreset Pentaplexity;
+
 	static const std::vector<LSystemPreset>& GetAllPresets();
 
 };
