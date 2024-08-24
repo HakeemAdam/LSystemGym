@@ -63,4 +63,7 @@
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
+  <ItemGroup>
+    <Font Include="dependencies\fonts\Lato-Regular.ttf" />
+  </ItemGroup>
 </Project>

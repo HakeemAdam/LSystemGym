@@ -33,6 +33,7 @@ public:
 	void SetShouldRegenerate(bool value) { m_shouldRegenerate = value; }
 	void SetPreset(const LSystemPreset& preset);
 
+	ImFont LoadCustomFont();
 
 private:
 	float m_angle;
@@ -57,6 +58,7 @@ private:
 	const LSystemPreset* m_currentPreset;
 	void InitDefaultRules();
 	void UpdateRules();
+
 
 };
 

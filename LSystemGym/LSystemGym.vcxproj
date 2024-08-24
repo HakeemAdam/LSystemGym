@@ -149,6 +149,9 @@
     <ClInclude Include="src\LSystemPreset.h" />
     <ClInclude Include="src\LSystemVisualizer.h" />
   </ItemGroup>
+  <ItemGroup>
+    <Font Include="dependencies\fonts\Lato-Regular.ttf" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

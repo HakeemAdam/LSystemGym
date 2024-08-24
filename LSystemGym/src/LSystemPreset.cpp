@@ -13,7 +13,7 @@ const LSystemPreset LSystemPresets::Sierpinski =
     "Sierpinski Triangle",
     "F-G-G",
     {{'F', "F-G+F+G-F"}, {'G', "GG"}},
-    60
+    120
 };
 
 const LSystemPreset LSystemPresets::Plant =

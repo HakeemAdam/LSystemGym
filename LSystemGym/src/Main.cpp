@@ -30,14 +30,14 @@ int main()
 	Lsystem lsystem;
 	LSystemController controller(&lsystem);
 	controller.InitLystem();
-
 	Visualizer visualizer;
 
 	std::vector<LineSegment> segments;
-
 	Color col;
 	ImColor uiCol;
-	
+
+	ImFont font = controller.LoadCustomFont();
+	rlImGuiReloadFonts();
 
 	while (!WindowShouldClose())
 	{
@@ -56,7 +56,13 @@ int main()
 		// gui
 
 		rlImGuiBegin();
+		
+		ImGui::PushFont(&font);
+		
 		controller.DrawUI();
+
+		ImGui::PopFont();
+		
 		rlImGuiEnd();
 
 		angle = controller.GetAngel();

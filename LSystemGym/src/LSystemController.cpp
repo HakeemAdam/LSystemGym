@@ -1,6 +1,8 @@
 #include "LSystemController.h"
 #include "Lsystem.h"
 #include "LSystemPreset.h"
+#include <iostream>
+
 
 //#include "LSystemVisualizer.h"
 
@@ -22,7 +24,6 @@ LSystemController::~LSystemController()
 
 void LSystemController::DrawUI()
 {
-
 	ImGui::Begin("L-System Controller", NULL);
 	
 	float currentAngle = m_angle;
@@ -184,8 +185,9 @@ void LSystemController::DrawUI()
 	}
 
 	ImGui::SliderFloat("Animation Speed", &m_animationSpeed, 0.001f, 1.0f, "%.04f", 0);
-
+	
 	ImGui::End();
+	
 }
 
 void LSystemController::InitLystem()
@@ -243,6 +245,24 @@ void LSystemController::UpdateRules()
 	m_lsystem->GenerateLsystem(m_iterations);
 	m_shouldRegenerate = true;
 }
+
+ImFont LSystemController::LoadCustomFont()
+{
+	ImGuiIO& io = ImGui::GetIO();
+	ImFont returnfont;
+	ImFont* font = io.Fonts->AddFontFromFileTTF("D:/dirs/Code/CPP/Rays/LSystemGym/LSystemGym/dependencies/fonts/Lato-Regular.ttf", 16.0f, NULL);
+	if (font == nullptr) {
+		std::cerr << "Failed to load font\n";
+		// Use default font as fallback
+		font = io.Fonts->AddFontDefault();
+	}
+	IM_ASSERT(font != nullptr);
+	io.Fonts->Build();
+
+	return returnfont = *font;
+	
+}
+
 
 void LSystemController::ResetFlags()
 {
