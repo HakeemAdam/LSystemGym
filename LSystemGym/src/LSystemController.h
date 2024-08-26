@@ -20,6 +20,7 @@ public:
 	void InitLystem();
 	
 	float GetAngel() const { return m_angle; }
+	void SetAngle(int angle) { m_angle = angle; }
 	int GetLength() const { return m_length; }
 	int GetIteration() const { return m_iterations; }
 	ImColor GetColor() const { return m_currentColor; }
@@ -30,6 +31,7 @@ public:
 	bool ShouldRegenerate() const { return m_shouldRegenerate; }
 	bool ShouldAnimate() const { return m_shouldAnimate; }
 	void ResetFlags();
+	bool SetFlags(bool flag);
 	void SetShouldRegenerate(bool value) { m_shouldRegenerate = value; }
 	void SetPreset(const LSystemPreset& preset);
 

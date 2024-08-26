@@ -15,7 +15,8 @@ enum class AnimationMode
 {
 	None,
 	Growth,
-	Fade
+	Fade, 
+	Cycle
 };
 
 class Visualizer {
@@ -29,10 +30,13 @@ public:
 	void SetAnimationSpeed(float speed);
 	void AnimateAndDraw();
 
+	float GetAnimationAngle() const { return m_animationAngle; }
+
 private:
 	AnimationMode m_currentMode = AnimationMode::None;
 	float m_animationProgress = 0.0f;
 	float m_animationSpeed = 1.0f;
+	float m_animationAngle = 0.0f;
 	std::vector<LineSegment> m_fullSegments;
 
 };

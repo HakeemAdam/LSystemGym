@@ -78,6 +78,9 @@ std::vector<LineSegment> Visualizer::GenerateLSystem(const std::string& lstring,
 		case '\'':
 			currentLemght *= 2.0f;
 			break;
+		case '|':
+			currentAngle += 180;
+			break;
 		}
 	}
 	return segments;
@@ -126,14 +129,24 @@ void Visualizer::AnimateAndDraw()
 		for (int i = 0; i < segmentsToShow; i++)
 		{
 			const auto& segment = m_fullSegments[i];
-			if (m_currentMode == AnimationMode::Growth)
+			switch (m_currentMode)
 			{
+			case AnimationMode::Growth:
 				DrawLineV(segment.start, segment.end, segment.color);
-			}
-			else if (m_currentMode == AnimationMode::Fade)
-			{
+				break;
+			case AnimationMode::Fade:
 				Color fadeColor = ColorAlpha(segment.color, m_animationProgress);
 				DrawLineV(segment.start, segment.end, fadeColor);
+				break;
+			case AnimationMode::Cycle:
+				m_animationAngle = m_animationProgress * 360.0f;
+				//m_animationAngle = fmodf(m_animationAngle, 360.0f);
+				DrawLineV(segment.start, segment.end, segment.color);
+				break;
+			default:
+				AnimationMode::None;
+				break;
+
 			}
 		}
 	}

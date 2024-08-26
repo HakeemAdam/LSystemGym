@@ -74,23 +74,27 @@ int main()
 		
 		// Draw
 
-		if (controller.ShouldRegenerate())
+		if (controller.GetAnimationMode() == 3)
+		{
+			angle = visualizer.GetAnimationAngle();
+			controller.SetAngle(angle);
+		}
+
+		if (controller.ShouldRegenerate() || controller.GetAnimationMode() ==3 )
 		{
 			std::string res = lsystem.GetCurrentString();
-			segments = Visualizer::GenerateLSystem(res, mouseX, mouseY, angle,static_cast<float>(length), col);
+			segments = Visualizer::GenerateLSystem(res, mouseX, mouseY, angle,
+				static_cast<float>(length), col);
 			visualizer.SetFullSegments(segments);
-			visualizer.AnimateAndDraw();
-			controller.ResetFlags();
 		}
-		
+
 		if (controller.ShouldAnimate())
 		{
 			visualizer.StartAnimation(controller.GetAnimationMode());
 		}
-		
+
 		visualizer.AnimateAndDraw();
 		controller.ResetFlags();
-		
 		EndDrawing();
 	}
 

@@ -159,10 +159,25 @@ void LSystemController::DrawUI()
 
 	
 
-	const char* modes[] = { "Growth", "Fade" };
+	const char* modes[] = { "Growth", "Fade", "Cycle"};
 	static int currentMode = 0;
 	ImGui::Combo("Animation Mode", &currentMode, modes, IM_ARRAYSIZE(modes));
-	m_animationMode = (currentMode == 0) ? 1 : 2;
+	//m_animationMode = (currentMode == 0) ? 1 : 2;
+	switch (currentMode)
+	{
+	case 0:
+		m_animationMode = 1;
+		break;
+	case 1:
+		m_animationMode = 2;
+		break;
+	case 2:
+		m_animationMode = 3;
+		break;
+	default:
+		m_animationMode = 0;
+		break;
+	}
 
 	if (ImGui::Button("Regenerate L-System"))
 	{
@@ -272,4 +287,9 @@ void LSystemController::ResetFlags()
 {
 	m_shouldRegenerate = false;
 	m_shouldAnimate = false;
+}
+
+bool LSystemController::SetFlags(bool flag)
+{
+	return m_shouldRegenerate = flag;
 }
