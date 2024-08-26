@@ -93,7 +93,16 @@ int main()
 			visualizer.StartAnimation(controller.GetAnimationMode());
 		}
 
-		visualizer.AnimateAndDraw();
+		if (!controller.isPaused())
+		{
+			visualizer.AnimateAndDraw();
+		}
+		else
+		{
+			visualizer.DrawOnly();
+		}
+
+		
 		controller.ResetFlags();
 		EndDrawing();
 	}

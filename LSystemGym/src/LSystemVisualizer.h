@@ -29,6 +29,7 @@ public:
 	void StopAnimation();
 	void SetAnimationSpeed(float speed);
 	void AnimateAndDraw();
+	void DrawOnly();
 
 	float GetAnimationAngle() const { return m_animationAngle; }
 

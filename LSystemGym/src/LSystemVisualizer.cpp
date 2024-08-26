@@ -122,32 +122,38 @@ void Visualizer::AnimateAndDraw()
 	{
 		m_animationProgress += GetFrameTime() * m_animationSpeed;
 		if (m_animationProgress > 1.0f) m_animationProgress = 1.0f;
+		DrawOnly();
+	}
+}
 
-		int segmentsToShow = static_cast<int>(m_fullSegments.size() * m_animationProgress);
+void Visualizer::DrawOnly()
+{
 
 
-		for (int i = 0; i < segmentsToShow; i++)
+	int segmentsToShow = static_cast<int>(m_fullSegments.size() * m_animationProgress);
+
+
+	for (int i = 0; i < segmentsToShow; i++)
+	{
+		const auto& segment = m_fullSegments[i];
+		switch (m_currentMode)
 		{
-			const auto& segment = m_fullSegments[i];
-			switch (m_currentMode)
-			{
-			case AnimationMode::Growth:
-				DrawLineV(segment.start, segment.end, segment.color);
-				break;
-			case AnimationMode::Fade:
-				Color fadeColor = ColorAlpha(segment.color, m_animationProgress);
-				DrawLineV(segment.start, segment.end, fadeColor);
-				break;
-			case AnimationMode::Cycle:
-				m_animationAngle = m_animationProgress * 360.0f;
-				//m_animationAngle = fmodf(m_animationAngle, 360.0f);
-				DrawLineV(segment.start, segment.end, segment.color);
-				break;
-			default:
-				AnimationMode::None;
-				break;
+		case AnimationMode::Growth:
+			DrawLineV(segment.start, segment.end, segment.color);
+			break;
+		case AnimationMode::Fade:
+			Color fadeColor = ColorAlpha(segment.color, m_animationProgress);
+			DrawLineV(segment.start, segment.end, fadeColor);
+			break;
+		case AnimationMode::Cycle:
+			m_animationAngle = m_animationProgress * 360.0f;
+			//m_animationAngle = fmodf(m_animationAngle, 360.0f);
+			DrawLineV(segment.start, segment.end, segment.color);
+			break;
+		default:
+			AnimationMode::None;
+			break;
 
-			}
 		}
 	}
 }

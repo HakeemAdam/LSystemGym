@@ -13,7 +13,8 @@ LSystemController::LSystemController(Lsystem* lsystem)
 	m_animationMode(0),
 	m_shouldRegenerate(false),
 	m_shouldAnimate(false),
-	m_animationSpeed(0.5f)
+	m_animationSpeed(0.5f),
+	m_isPaused(false)
 {
 	InitLystem();
 }
@@ -197,6 +198,11 @@ void LSystemController::DrawUI()
 	{
 		m_shouldRegenerate = true;
 		m_shouldAnimate = true;
+	}
+	ImGui::SameLine();
+
+	if (ImGui::Button(m_isPaused ? "Resume" : "Pause")) {
+		m_isPaused = !m_isPaused;
 	}
 
 	ImGui::SliderFloat("Animation Speed", &m_animationSpeed, 0.001f, 1.0f, "%.04f", 0);

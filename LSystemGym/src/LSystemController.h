@@ -24,6 +24,9 @@ public:
 	int GetLength() const { return m_length; }
 	int GetIteration() const { return m_iterations; }
 	ImColor GetColor() const { return m_currentColor; }
+	
+	bool isPaused() const { return m_isPaused; }
+	void SetPause(bool p) { m_isPaused = p; }
 
 	int GetAnimationMode() const { return m_animationMode; }
 	float GetAnimationSpeed() const { return m_animationSpeed; }
@@ -56,6 +59,7 @@ private:
 	int m_animationMode;
 	bool m_shouldRegenerate;
 	bool m_shouldAnimate;
+	bool m_isPaused;
 
 	const LSystemPreset* m_currentPreset;
 	void InitDefaultRules();
