@@ -27,6 +27,15 @@ int main()
 	SetTargetFPS(120);
 	rlImGuiSetup(true);
 
+	/*Camera3D cam;
+	cam.position = Vector3{ 0,0,20 };
+	cam.target = Vector3{ -1,0,0 };
+	cam.up = Vector3{ 0.0f, -1.0f, 0.0f };
+	cam.fovy = 25.0f;
+	cam.projection = CAMERA_PERSPECTIVE;*/
+
+
+
 	Lsystem lsystem;
 	LSystemController controller(&lsystem);
 	controller.InitLystem();
@@ -41,6 +50,14 @@ int main()
 
 	while (!WindowShouldClose())
 	{
+		// cam
+		
+		if (IsMouseButtonDown(MOUSE_BUTTON_RIGHT))
+		{
+			//UpdateCamera(&cam, CAMERA_FREE);
+		}
+
+		
 		// events
 		
 		if (IsMouseButtonPressed(MOUSE_BUTTON_MIDDLE))
@@ -56,6 +73,8 @@ int main()
 		// gui
 
 		rlImGuiBegin();
+
+		
 		
 		ImGui::PushFont(&font);
 		
@@ -64,6 +83,11 @@ int main()
 		ImGui::PopFont();
 		
 		rlImGuiEnd();
+
+		// 3d
+		//BeginMode3D(cam);
+		//DrawGrid(20, 1);
+		
 
 		angle = controller.GetAngel();
 		length = controller.GetLength();
@@ -84,7 +108,7 @@ int main()
 		{
 			std::string res = lsystem.GetCurrentString();
 			segments = Visualizer::GenerateLSystem(res, mouseX, mouseY, angle,
-				static_cast<float>(length), col);
+				static_cast<float>(length) , col);
 			visualizer.SetFullSegments(segments);
 		}
 
@@ -102,6 +126,7 @@ int main()
 			visualizer.DrawOnly();
 		}
 
+		//EndMode3D();
 		
 		controller.ResetFlags();
 		EndDrawing();

@@ -184,7 +184,7 @@ void LSystemController::DrawUI()
 
 		if (m_animationMode != 3)
 		{
-			SetAngle(m_currentPreset->angle);
+			SetAngle(m_angle);
 		}
 	}
 	//m_animationMode = (currentMode == 0) ? 1 : 2;
