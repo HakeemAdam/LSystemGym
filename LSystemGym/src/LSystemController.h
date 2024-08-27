@@ -37,6 +37,7 @@ public:
 	bool SetFlags(bool flag);
 	void SetShouldRegenerate(bool value) { m_shouldRegenerate = value; }
 	void SetPreset(const LSystemPreset& preset);
+	const LSystemPreset* GetCurrentPreset() const { return m_currentPreset; }
 
 	ImFont LoadCustomFont();
 

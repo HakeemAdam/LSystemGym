@@ -134,6 +134,8 @@ void LSystemController::DrawUI()
 			if (ImGui::Selectable(preset.name.c_str()))
 			{
 				SetPreset(preset);
+				SetAngle(preset.angle);
+				m_angle = preset.angle;
 				m_shouldRegenerate = true;
 			}
 		}
@@ -162,23 +164,31 @@ void LSystemController::DrawUI()
 
 	const char* modes[] = { "Growth", "Fade", "Cycle"};
 	static int currentMode = 0;
-	ImGui::Combo("Animation Mode", &currentMode, modes, IM_ARRAYSIZE(modes));
-	//m_animationMode = (currentMode == 0) ? 1 : 2;
-	switch (currentMode)
+	if (ImGui::Combo("Animation Mode", &currentMode, modes, IM_ARRAYSIZE(modes)))
 	{
-	case 0:
-		m_animationMode = 1;
-		break;
-	case 1:
-		m_animationMode = 2;
-		break;
-	case 2:
-		m_animationMode = 3;
-		break;
-	default:
-		m_animationMode = 0;
-		break;
+		switch (currentMode)
+		{
+		case 0:
+			m_animationMode = 1;
+			break;
+		case 1:
+			m_animationMode = 2;
+			break;
+		case 2:
+			m_animationMode = 3;
+			break;
+		default:
+			m_animationMode = 0;
+			break;
+		}
+
+		if (m_animationMode != 3)
+		{
+			SetAngle(m_currentPreset->angle);
+		}
 	}
+	//m_animationMode = (currentMode == 0) ? 1 : 2;
+	
 
 	if (ImGui::Button("Regenerate L-System"))
 	{
