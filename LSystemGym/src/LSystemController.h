@@ -41,6 +41,8 @@ public:
 
 	ImFont LoadCustomFont();
 
+	void SetCustomStyle();
+
 private:
 	float m_angle;
 	int m_length;
@@ -65,6 +67,8 @@ private:
 	const LSystemPreset* m_currentPreset;
 	void InitDefaultRules();
 	void UpdateRules();
+
+	bool m_colorPickerExpanded = false;
 
 
 };

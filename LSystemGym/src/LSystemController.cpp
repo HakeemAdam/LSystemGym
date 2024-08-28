@@ -17,6 +17,7 @@ LSystemController::LSystemController(Lsystem* lsystem)
 	m_isPaused(false)
 {
 	InitLystem();
+	SetCustomStyle();
 }
 
 LSystemController::~LSystemController()
@@ -25,6 +26,11 @@ LSystemController::~LSystemController()
 
 void LSystemController::DrawUI()
 {
+	float windowHeight = ImGui::GetFrameHeightWithSpacing() * 10; // Base height for other elements
+	windowHeight += m_colorPickerExpanded ? 500 : 160; // Add height for color picker (expanded or collapsed)
+
+	// Set size constraints for the window
+	ImGui::SetNextWindowSizeConstraints(ImVec2(300, windowHeight), ImVec2(FLT_MAX, windowHeight));
 	ImGui::Begin("L-System Controller", NULL);
 	
 	float currentAngle = m_angle;
@@ -125,7 +131,7 @@ void LSystemController::DrawUI()
 		m_shouldRegenerate = true;
 	}
 
-	ImGui::Separator();
+	//ImGui::Separator();
 
 	if (ImGui::BeginCombo("Presets", "Select a preset"))
 	{
@@ -134,7 +140,7 @@ void LSystemController::DrawUI()
 			if (ImGui::Selectable(preset.name.c_str()))
 			{
 				SetPreset(preset);
-				SetAngle(preset.angle);
+				//SetAngle(preset.angle);
 				m_angle = preset.angle;
 				m_shouldRegenerate = true;
 			}
@@ -144,19 +150,35 @@ void LSystemController::DrawUI()
 	
 
 	ImGui::Separator();
-	ImGui::Text("Color");
-	ImVec2 colorPickerSize(200, 200);
-	
-	ImGui::BeginChild("ColorPickerChild", colorPickerSize);
-	ImGuiColorEditFlags flags =  ImGuiColorEditFlags_NoSidePreview | ImGuiColorEditFlags_NoSmallPreview;
 
-	if (ImGui::ColorPicker4("##picker", &m_currentColor.Value.x, flags, NULL))
+	if (ImGui::TreeNode("Color Picker"))
 	{
-		
-		m_currentColor = ImColor(m_currentColor.Value.x, m_currentColor.Value.y, m_currentColor.Value.z, m_currentColor.Value.w);
-		m_shouldRegenerate = true;
+		m_colorPickerExpanded = true;
+
+		ImVec2 colorPickerSize = ImGui::GetContentRegionAvail();
+		colorPickerSize.y = colorPickerSize.x;  // Make it square
+		colorPickerSize.x = std::min(colorPickerSize.x, 200.0f);  // Limit maximum size
+		colorPickerSize.y = std::min(colorPickerSize.y, 200.0f);  // Limit maximum size
+
+		ImGuiColorEditFlags flags = ImGuiColorEditFlags_NoSidePreview | ImGuiColorEditFlags_NoSmallPreview;
+		if (ImGui::ColorPicker4("##picker", &m_currentColor.Value.x, flags, NULL))
+		{
+			m_currentColor = ImColor(m_currentColor.Value.x, m_currentColor.Value.y, m_currentColor.Value.z, m_currentColor.Value.w);
+			m_shouldRegenerate = true;
+		}
+
+		ImGui::TreePop();
 	}
-	ImGui::EndChild();
+	else
+	{
+		m_colorPickerExpanded = false;
+		ImGui::ColorButton("Current Color", m_currentColor, ImGuiColorEditFlags_NoPicker | ImGuiColorEditFlags_NoTooltip, ImVec2(20, 20));
+		ImGui::SameLine();
+		ImGui::Text("Current Color: #%02X%02X%02X",
+			static_cast<int>(m_currentColor.Value.x * 255),
+			static_cast<int>(m_currentColor.Value.y * 255),
+			static_cast<int>(m_currentColor.Value.z * 255));
+	}
 
 	ImGui::Separator();
 
@@ -280,7 +302,7 @@ void LSystemController::UpdateRules()
 	m_lsystem->GenerateLsystem(m_iterations);
 	m_shouldRegenerate = true;
 }
-
+#pragma region styling
 ImFont LSystemController::LoadCustomFont()
 {
 	ImGuiIO& io = ImGui::GetIO();
@@ -298,6 +320,64 @@ ImFont LSystemController::LoadCustomFont()
 	
 }
 
+void LSystemController::SetCustomStyle()
+{
+	ImGuiStyle& style = ImGui::GetStyle();
+	ImVec4* colors = style.Colors;
+
+	// Set the window background to the specified green color
+	colors[ImGuiCol_WindowBg] = ImVec4(0.2f, 0.6f, 0.06f, 1.0f);
+
+	// Style for buttons
+	colors[ImGuiCol_Button] = ImVec4(0.25f, 0.65f, 0.10f, 1.00f);
+	colors[ImGuiCol_ButtonHovered] = ImVec4(0.30f, 0.70f, 0.13f, 1.00f);
+	colors[ImGuiCol_ButtonActive] = ImVec4(0.35f, 0.75f, 0.15f, 1.00f);
+
+	// Style for input fields (FrameBg is used for input fields, sliders, etc.)
+	colors[ImGuiCol_FrameBg] = ImVec4(0.15f, 0.45f, 0.05f, 1.00f);
+	colors[ImGuiCol_FrameBgHovered] = ImVec4(0.20f, 0.50f, 0.08f, 1.00f);
+	colors[ImGuiCol_FrameBgActive] = ImVec4(0.25f, 0.55f, 0.10f, 1.00f);
+
+	// Style for dropdown (combo box)
+	colors[ImGuiCol_PopupBg] = ImVec4(0.15f, 0.45f, 0.05f, 1.00f);
+	colors[ImGuiCol_Header] = ImVec4(0.25f, 0.65f, 0.10f, 1.00f);
+	colors[ImGuiCol_HeaderHovered] = ImVec4(0.30f, 0.70f, 0.13f, 1.00f);
+	colors[ImGuiCol_HeaderActive] = ImVec4(0.35f, 0.75f, 0.15f, 1.00f);
+
+	// Style for slider grab
+	colors[ImGuiCol_SliderGrab] = ImVec4(0.75f, 0.75f, 0.75f, 1.00f);
+	colors[ImGuiCol_SliderGrabActive] = ImVec4(0.85f, 0.85f, 0.85f, 1.00f);
+
+	// Set header to orange
+	ImVec4 orangeColor = ImVec4(1.0f, 0.5f, 0.0f, 1.0f);  // Pure orange
+	colors[ImGuiCol_Header] = orangeColor;
+	colors[ImGuiCol_HeaderHovered] = ImVec4(1.0f, 0.6f, 0.1f, 1.0f);  // Slightly lighter orange
+	colors[ImGuiCol_HeaderActive] = ImVec4(0.9f, 0.4f, 0.0f, 1.0f);   // Slightly darker orange
+
+	// Set title bar colors to orange
+	colors[ImGuiCol_TitleBg] = orangeColor;
+	colors[ImGuiCol_TitleBgActive] = ImVec4(1.0f, 0.6f, 0.1f, 1.0f);  // Slightly lighter orange for active title bar
+	colors[ImGuiCol_TitleBgCollapsed] = ImVec4(0.9f, 0.4f, 0.0f, 1.0f);  // Slightly darker orange for collapsed title bar
+
+	// Style for scrollbar
+	colors[ImGuiCol_ScrollbarBg] = ImVec4(0.15f, 0.45f, 0.05f, 0.5f);  // Semi-transparent dark green
+	colors[ImGuiCol_ScrollbarGrab] = ImVec4(0.3f, 0.7f, 0.1f, 1.0f);   // Light green
+	colors[ImGuiCol_ScrollbarGrabHovered] = ImVec4(0.35f, 0.75f, 0.15f, 1.0f);
+	colors[ImGuiCol_ScrollbarGrabActive] = ImVec4(0.4f, 0.8f, 0.2f, 1.0f);
+
+	// Text color for better contrast on green background
+	colors[ImGuiCol_Text] = ImVec4(1.00f, 1.00f, 1.00f, 1.00f);
+
+	// Adjust rounding for buttons and input fields
+	style.FrameRounding = 4.0f;
+	style.GrabRounding = 4.0f;
+
+	// Adjust global spacing
+	style.ItemSpacing = ImVec2(8, 4);  // Space between widgets/lines
+	style.ItemInnerSpacing = ImVec2(4, 4);  // Space between elements of a composed widget
+	
+}
+#pragma endregion styling
 
 void LSystemController::ResetFlags()
 {
