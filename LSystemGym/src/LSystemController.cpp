@@ -27,7 +27,7 @@ LSystemController::~LSystemController()
 void LSystemController::DrawUI()
 {
 	float windowHeight = ImGui::GetFrameHeightWithSpacing() * 10; // Base height for other elements
-	windowHeight += m_colorPickerExpanded ? 500 : 160; // Add height for color picker (expanded or collapsed)
+	windowHeight += m_colorPickerExpanded ? 500 : 200; // Add height for color picker (expanded or collapsed)
 
 	// Set size constraints for the window
 	ImGui::SetNextWindowSizeConstraints(ImVec2(300, windowHeight), ImVec2(FLT_MAX, windowHeight));
@@ -325,56 +325,61 @@ void LSystemController::SetCustomStyle()
 	ImGuiStyle& style = ImGui::GetStyle();
 	ImVec4* colors = style.Colors;
 
-	// Set the window background to the specified green color
-	colors[ImGuiCol_WindowBg] = ImVec4(0.2f, 0.6f, 0.06f, 1.0f);
+	// Define color variables
+	ImVec4 primary = ImVec4(0.2f, 0.2f, 0.2f, 0.7f);    // Transparent grey for panels
+	ImVec4 secondary = ImVec4(0.25f, 0.25f, 0.25f, 0.6f); // Slightly lighter grey for elements
+	ImVec4 textColor = ImVec4(1.0f, 0.5f, 0.0f, 1.0f);  // Orange for text
+	ImVec4 fadedOrange = ImVec4(1.0f, 0.5f, 0.0f, 0.6f); // Faded orange for grab handles
+
+	// Set the window background
+	colors[ImGuiCol_WindowBg] = primary;
 
 	// Style for buttons
-	colors[ImGuiCol_Button] = ImVec4(0.25f, 0.65f, 0.10f, 1.00f);
-	colors[ImGuiCol_ButtonHovered] = ImVec4(0.30f, 0.70f, 0.13f, 1.00f);
-	colors[ImGuiCol_ButtonActive] = ImVec4(0.35f, 0.75f, 0.15f, 1.00f);
+	colors[ImGuiCol_Button] = secondary;
+	colors[ImGuiCol_ButtonHovered] = ImVec4(secondary.x, secondary.y, secondary.z, 0.8f);
+	colors[ImGuiCol_ButtonActive] = ImVec4(secondary.x, secondary.y, secondary.z, 1.0f);
 
-	// Style for input fields (FrameBg is used for input fields, sliders, etc.)
-	colors[ImGuiCol_FrameBg] = ImVec4(0.15f, 0.45f, 0.05f, 1.00f);
-	colors[ImGuiCol_FrameBgHovered] = ImVec4(0.20f, 0.50f, 0.08f, 1.00f);
-	colors[ImGuiCol_FrameBgActive] = ImVec4(0.25f, 0.55f, 0.10f, 1.00f);
+	// Style for input fields, sliders, etc.
+	colors[ImGuiCol_FrameBg] = secondary;
+	colors[ImGuiCol_FrameBgHovered] = ImVec4(secondary.x, secondary.y, secondary.z, 0.8f);
+	colors[ImGuiCol_FrameBgActive] = ImVec4(secondary.x, secondary.y, secondary.z, 1.0f);
 
-	// Style for dropdown (combo box)
-	colors[ImGuiCol_PopupBg] = ImVec4(0.15f, 0.45f, 0.05f, 1.00f);
-	colors[ImGuiCol_Header] = ImVec4(0.25f, 0.65f, 0.10f, 1.00f);
-	colors[ImGuiCol_HeaderHovered] = ImVec4(0.30f, 0.70f, 0.13f, 1.00f);
-	colors[ImGuiCol_HeaderActive] = ImVec4(0.35f, 0.75f, 0.15f, 1.00f);
+	// Style for dropdown (combo box) - more solid for readability
+	colors[ImGuiCol_PopupBg] = ImVec4(primary.x, primary.y, primary.z, 0.95f);
+	colors[ImGuiCol_Header] = ImVec4(secondary.x, secondary.y, secondary.z, 0.9f);
+	colors[ImGuiCol_HeaderHovered] = ImVec4(secondary.x, secondary.y, secondary.z, 1.0f);
+	colors[ImGuiCol_HeaderActive] = ImVec4(secondary.x + 0.1f, secondary.y + 0.1f, secondary.z + 0.1f, 1.0f);
 
-	// Style for slider grab
-	colors[ImGuiCol_SliderGrab] = ImVec4(0.75f, 0.75f, 0.75f, 1.00f);
-	colors[ImGuiCol_SliderGrabActive] = ImVec4(0.85f, 0.85f, 0.85f, 1.00f);
+	// Style for slider grab - now faded orange
+	colors[ImGuiCol_SliderGrab] = fadedOrange;
+	colors[ImGuiCol_SliderGrabActive] = ImVec4(fadedOrange.x, fadedOrange.y, fadedOrange.z, 0.8f);
 
-	// Set header to orange
-	ImVec4 orangeColor = ImVec4(1.0f, 0.5f, 0.0f, 1.0f);  // Pure orange
-	colors[ImGuiCol_Header] = orangeColor;
-	colors[ImGuiCol_HeaderHovered] = ImVec4(1.0f, 0.6f, 0.1f, 1.0f);  // Slightly lighter orange
-	colors[ImGuiCol_HeaderActive] = ImVec4(0.9f, 0.4f, 0.0f, 1.0f);   // Slightly darker orange
-
-	// Set title bar colors to orange
-	colors[ImGuiCol_TitleBg] = orangeColor;
-	colors[ImGuiCol_TitleBgActive] = ImVec4(1.0f, 0.6f, 0.1f, 1.0f);  // Slightly lighter orange for active title bar
-	colors[ImGuiCol_TitleBgCollapsed] = ImVec4(0.9f, 0.4f, 0.0f, 1.0f);  // Slightly darker orange for collapsed title bar
+	// Set title bar colors
+	colors[ImGuiCol_TitleBg] = primary;
+	colors[ImGuiCol_TitleBgActive] = ImVec4(primary.x, primary.y, primary.z, 0.8f);
+	colors[ImGuiCol_TitleBgCollapsed] = ImVec4(primary.x, primary.y, primary.z, 0.6f);
 
 	// Style for scrollbar
-	colors[ImGuiCol_ScrollbarBg] = ImVec4(0.15f, 0.45f, 0.05f, 0.5f);  // Semi-transparent dark green
-	colors[ImGuiCol_ScrollbarGrab] = ImVec4(0.3f, 0.7f, 0.1f, 1.0f);   // Light green
-	colors[ImGuiCol_ScrollbarGrabHovered] = ImVec4(0.35f, 0.75f, 0.15f, 1.0f);
-	colors[ImGuiCol_ScrollbarGrabActive] = ImVec4(0.4f, 0.8f, 0.2f, 1.0f);
+	colors[ImGuiCol_ScrollbarBg] = ImVec4(primary.x, primary.y, primary.z, 0.5f);
+	colors[ImGuiCol_ScrollbarGrab] = fadedOrange;
+	colors[ImGuiCol_ScrollbarGrabHovered] = ImVec4(fadedOrange.x, fadedOrange.y, fadedOrange.z, 0.8f);
+	colors[ImGuiCol_ScrollbarGrabActive] = ImVec4(fadedOrange.x, fadedOrange.y, fadedOrange.z, 1.0f);
 
-	// Text color for better contrast on green background
-	colors[ImGuiCol_Text] = ImVec4(1.00f, 1.00f, 1.00f, 1.00f);
+	// Text color (orange)
+	colors[ImGuiCol_Text] = textColor;
 
-	// Adjust rounding for buttons and input fields
-	style.FrameRounding = 4.0f;
-	style.GrabRounding = 4.0f;
+	// Increase rounding for a more rounded look
+	style.WindowRounding = 8.0f;
+	style.ChildRounding = 8.0f;
+	style.FrameRounding = 8.0f;
+	style.PopupRounding = 8.0f;
+	style.ScrollbarRounding = 8.0f;
+	style.GrabRounding = 8.0f;
+	style.TabRounding = 8.0f;
 
 	// Adjust global spacing
-	style.ItemSpacing = ImVec2(8, 4);  // Space between widgets/lines
-	style.ItemInnerSpacing = ImVec2(4, 4);  // Space between elements of a composed widget
+	style.ItemSpacing = ImVec2(6, 3);
+	style.ItemInnerSpacing = ImVec2(3, 3);
 	
 }
 #pragma endregion styling
