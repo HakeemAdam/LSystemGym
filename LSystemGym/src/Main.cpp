@@ -3,6 +3,7 @@
 #include "Lsystem.h"
 #include "LSystemVisualizer.h"
 #include "LSystemController.h"
+#include "LSystemCamera.h"
 #include "rlImGui.h"
 #include "rlImGuiColors.h"
 
@@ -28,7 +29,7 @@ int main()
 	rlImGuiSetup(true);
 
 	/*Camera3D cam;
-	cam.position = Vector3{ 0,0,20 };
+	cam.position = Vector3{ 0,0,10 };
 	cam.target = Vector3{ -1,0,0 };
 	cam.up = Vector3{ 0.0f, -1.0f, 0.0f };
 	cam.fovy = 25.0f;
@@ -40,6 +41,7 @@ int main()
 	LSystemController controller(&lsystem);
 	controller.InitLystem();
 	Visualizer visualizer;
+	LSystemCamera cam;
 
 	std::vector<LineSegment> segments;
 	Color col;
@@ -47,6 +49,7 @@ int main()
 
 	ImFont font = controller.LoadCustomFont();
 	rlImGuiReloadFonts();
+	Vector2 previousMousePosition = GetMousePosition();
 
 	while (!WindowShouldClose())
 	{
@@ -54,9 +57,14 @@ int main()
 		
 		if (IsMouseButtonDown(MOUSE_BUTTON_RIGHT))
 		{
-			//UpdateCamera(&cam, CAMERA_FREE);
+			cam.Update();
+			UpdateCamera(cam.GetCamera(), CAMERA_PERSPECTIVE);
 		}
 
+	
+		cam.SetRotationFactor(controller.GetAnimationSpeed());
+		cam.SetCameraTime(GetFrameTime());
+		cam.Rotate();
 		
 		// events
 		
@@ -64,6 +72,7 @@ int main()
 		{
 			mouseX = GetMousePosition().x;
 			mouseY = GetMousePosition().y;
+
 			controller.SetShouldRegenerate(true);
 		}
 		
@@ -84,8 +93,9 @@ int main()
 		
 		rlImGuiEnd();
 
+
 		// 3d
-		//BeginMode3D(cam);
+		BeginMode3D(*cam.GetCamera());
 		//DrawGrid(20, 1);
 		
 
@@ -95,6 +105,7 @@ int main()
 		col = rlImGuiColors::Convert(uiCol);
 		speed = controller.GetAnimationSpeed();
 		visualizer.SetAnimationSpeed(speed);
+		
 		
 		// Draw
 
@@ -107,8 +118,8 @@ int main()
 		if (controller.ShouldRegenerate() || controller.GetAnimationMode() ==3 )
 		{
 			std::string res = lsystem.GetCurrentString();
-			segments = Visualizer::GenerateLSystem(res, mouseX, mouseY, angle,
-				static_cast<float>(length) , col);
+			segments = Visualizer::GenerateLSystem(res, 0, 0, angle,
+				static_cast<float>(length) *0.01 , col);
 			visualizer.SetFullSegments(segments);
 		}
 
@@ -126,7 +137,7 @@ int main()
 			visualizer.DrawOnly();
 		}
 
-		//EndMode3D();
+		EndMode3D();
 		
 		controller.ResetFlags();
 		EndDrawing();

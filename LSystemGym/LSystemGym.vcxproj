@@ -131,6 +131,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\LSystemCamera.cpp" />
     <ClCompile Include="src\LSystemController.cpp" />
     <ClCompile Include="src\LSystemPreset.cpp" />
     <ClCompile Include="src\rlImGui.cpp" />
@@ -145,6 +146,7 @@
     <ClInclude Include="dependencies\include\rlImGui.h" />
     <ClInclude Include="dependencies\include\rlImGuiColors.h" />
     <ClInclude Include="src\Lsystem.h" />
+    <ClInclude Include="src\LSystemCamera.h" />
     <ClInclude Include="src\LSystemController.h" />
     <ClInclude Include="src\LSystemPreset.h" />
     <ClInclude Include="src\LSystemVisualizer.h" />
