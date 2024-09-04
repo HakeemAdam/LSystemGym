@@ -9,141 +9,129 @@
 
 int main()
 {
-	std::cout << "Hello Lsystem" << '\n';
+    std::cout << "Hello Lsystem" << '\n';
 
-	const int winndowWidth = 1000;
-	const int windowHeight = 1000;
-
-
-	float angle = 90;
-	int length;
-	float speed;
-
-	float mouseX = static_cast<float>(winndowWidth) / 2;
-	float mouseY = static_cast<float>(windowHeight) - 200;
-
-	SetConfigFlags(FLAG_VSYNC_HINT | FLAG_WINDOW_RESIZABLE | FLAG_WINDOW_HIGHDPI);
-	InitWindow(windowHeight, winndowWidth, "L-System Gym");
-
-	SetTargetFPS(120);
-	rlImGuiSetup(true);
-
-	/*Camera3D cam;
-	cam.position = Vector3{ 0,0,10 };
-	cam.target = Vector3{ -1,0,0 };
-	cam.up = Vector3{ 0.0f, -1.0f, 0.0f };
-	cam.fovy = 25.0f;
-	cam.projection = CAMERA_PERSPECTIVE;*/
+    const int winndowWidth = 1000;
+    const int windowHeight = 1000;
 
 
+    float angle = 90;
+    int length;
+    float speed;
 
-	Lsystem lsystem;
-	LSystemController controller(&lsystem);
-	controller.InitLystem();
-	Visualizer visualizer;
-	LSystemCamera cam;
+    float mouseX = static_cast<float>(winndowWidth) / 2;
+    float mouseY = static_cast<float>(windowHeight) - 200;
 
-	std::vector<LineSegment> segments;
-	Color col;
-	ImColor uiCol;
+    SetConfigFlags(FLAG_VSYNC_HINT | FLAG_WINDOW_RESIZABLE | FLAG_WINDOW_HIGHDPI);
+    InitWindow(windowHeight, winndowWidth, "L-System Gym");
 
-	ImFont font = controller.LoadCustomFont();
-	rlImGuiReloadFonts();
-	Vector2 previousMousePosition = GetMousePosition();
+    SetTargetFPS(120);
+    rlImGuiSetup(true);
 
-	while (!WindowShouldClose())
-	{
-		// cam
-		
-		if (IsMouseButtonDown(MOUSE_BUTTON_RIGHT))
-		{
-			cam.Update();
-			UpdateCamera(cam.GetCamera(), CAMERA_PERSPECTIVE);
-		}
+    Lsystem lsystem;
+    LSystemController controller(&lsystem);
+    controller.InitLystem();
+    Visualizer visualizer;
+    LSystemCamera cam;
 
-	
-		cam.SetRotationFactor(controller.GetAnimationSpeed());
-		cam.SetCameraTime(GetFrameTime());
-		cam.Rotate();
-		
-		// events
-		
-		if (IsMouseButtonPressed(MOUSE_BUTTON_MIDDLE))
-		{
-			mouseX = GetMousePosition().x;
-			mouseY = GetMousePosition().y;
+    std::vector<LineSegment> segments;
+    Color col;
+    ImColor uiCol;
 
-			controller.SetShouldRegenerate(true);
-		}
-		
-		BeginDrawing();
-		ClearBackground(SKYBLUE);
+    ImFont font = controller.LoadCustomFont();
+    rlImGuiReloadFonts();
+    Vector2 previousMousePosition = GetMousePosition();
 
-		// gui
+    while (!WindowShouldClose())
+    {
+        // cam
 
-		rlImGuiBegin();
+        if (IsMouseButtonDown(MOUSE_BUTTON_RIGHT))
+        {
+            cam.StopRotation();
+            cam.Update();
+            UpdateCamera(cam.GetCamera(), CAMERA_PERSPECTIVE);
+        }
 
-		
-		
-		ImGui::PushFont(&font);
-		
-		controller.DrawUI();
-
-		ImGui::PopFont();
-		
-		rlImGuiEnd();
+        if (IsKeyDown(KEY_SPACE))
+        {
+            cam.SetRotationFactor(controller.GetAnimationSpeed());
+            cam.SetCameraTime(GetFrameTime());
+            cam.Rotate();
+        }
 
 
-		// 3d
-		BeginMode3D(*cam.GetCamera());
-		//DrawGrid(20, 1);
-		
+        // events
 
-		angle = controller.GetAngel();
-		length = controller.GetLength();
-		uiCol = controller.GetColor();
-		col = rlImGuiColors::Convert(uiCol);
-		speed = controller.GetAnimationSpeed();
-		visualizer.SetAnimationSpeed(speed);
-		
-		
-		// Draw
+        if (IsMouseButtonPressed(MOUSE_BUTTON_MIDDLE))
+        {
+            mouseX = GetMousePosition().x;
+            mouseY = GetMousePosition().y;
 
-		if (controller.GetAnimationMode() == 3)
-		{
-			angle = visualizer.GetAnimationAngle();
-			controller.SetAngle(angle);
-		}
+            controller.SetShouldRegenerate(true);
+        }
 
-		if (controller.ShouldRegenerate() || controller.GetAnimationMode() ==3 )
-		{
-			std::string res = lsystem.GetCurrentString();
-			segments = Visualizer::GenerateLSystem(res, 0, 0, angle,
-				static_cast<float>(length) *0.01 , col);
-			visualizer.SetFullSegments(segments);
-		}
+        BeginDrawing();
+        ClearBackground(SKYBLUE);
 
-		if (controller.ShouldAnimate())
-		{
-			visualizer.StartAnimation(controller.GetAnimationMode());
-		}
+        // gui
 
-		if (!controller.isPaused())
-		{
-			visualizer.AnimateAndDraw();
-		}
-		else
-		{
-			visualizer.DrawOnly();
-		}
+        rlImGuiBegin();
+        ImGui::PushFont(&font);
+        controller.DrawUI();
+        ImGui::PopFont();
+        rlImGuiEnd();
 
-		EndMode3D();
-		
-		controller.ResetFlags();
-		EndDrawing();
-	}
 
-	rlImGuiShutdown();
-	CloseWindow();
-	return 0;
+        // 3d
+        BeginMode3D(*cam.GetCamera());
+        //DrawGrid(20, 1);
+
+
+        angle = controller.GetAngel();
+        length = controller.GetLength();
+        uiCol = controller.GetColor();
+        col = rlImGuiColors::Convert(uiCol);
+        speed = controller.GetAnimationSpeed();
+        visualizer.SetAnimationSpeed(speed);
+
+
+        // Draw
+
+        if (controller.GetAnimationMode() == 3)
+        {
+            angle = visualizer.GetAnimationAngle();
+            controller.SetAngle(angle);
+        }
+
+        if (controller.ShouldRegenerate() || controller.GetAnimationMode() == 3)
+        {
+            std::string res = lsystem.GetCurrentString();
+            segments = Visualizer::GenerateLSystem(res, 0, 0, angle,
+                                                   static_cast<float>(length) * 0.01, col);
+            visualizer.SetFullSegments(segments);
+        }
+
+        if (controller.ShouldAnimate())
+        {
+            visualizer.StartAnimation(controller.GetAnimationMode());
+        }
+
+        if (!controller.isPaused())
+        {
+            visualizer.AnimateAndDraw();
+        }
+        else
+        {
+            visualizer.DrawOnly();
+        }
+
+        EndMode3D();
+        controller.ResetFlags();
+        EndDrawing();
+    }
+
+    rlImGuiShutdown();
+    CloseWindow();
+    return 0;
 }
